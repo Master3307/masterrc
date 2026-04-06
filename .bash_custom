@@ -1,0 +1,74 @@
+# Custom:
+# MrKoby07 was hereee
+
+alias vencord='echo Starting Vencord installer... && echo Elevating with sudo... && sudo "$HOME/.local/bin/vencord"'
+alias sudp='sudo'
+alias masterrc="bash <(curl -fsSL https://server.master3307.org/share/sh/install.sh)"
+
+aptt() {
+  echo "------------------------------"
+  echo "Authenticating..."
+  echo
+  sudo -v
+  echo
+  echo "------------------------------"
+  echo "Updating Flatpak..."
+  echo
+  flatpak update | awk '/end-of-life/ { skip=1 } skip && /^$/ { skip=0; next } !skip'
+  echo
+  echo "------------------------------"
+  echo "Updating APT..."
+  echo
+  sudo apt update
+  echo
+  echo "------------------------------"
+  echo "Doing upgrade..."
+  echo
+  sudo apt upgrade
+  echo
+  echo "------------------------------"
+  echo "Doing full-upgrade..."
+  echo
+  sudo apt full-upgrade
+}
+
+typewriter() {
+  local text="$1"
+  local delay="${2:-0.03}"
+  local i char
+  while IFS= read -r -n1 char; do
+    printf "%s" "$char"
+    sleep "$delay"
+  done <<< "$text"
+  printf "\n"
+}
+
+user_name="${USER:-MrKoby07}"
+msg="$(printf '\033[31m- \033[0;33mWelcome to the Terminal \033[1;35m%s\033[0m \033[31m-\033[0m' "$user_name")"
+
+rand_typewriter() {
+  local text="$1"
+  local delay="${2:-0.03}"
+  local i char
+  while IFS= read -r -n1 char; do
+    printf "%s" "$char"
+    sleep "$delay"
+  done <<< "$text"
+  printf "\n"
+}
+
+qmsg=$'\033[0;36mWhat magical thing might you do today?\033[0m'
+
+echo
+sudo nerdfetch
+echo
+fortune -a
+echo
+echo
+typewriter "$msg" 0.01
+echo
+rand_typewriter "$qmsg" 0.01
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
