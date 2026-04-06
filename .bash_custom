@@ -4,7 +4,7 @@
 alias vencord='echo Starting Vencord installer... && echo Elevating with sudo... && sudo "$HOME/.local/bin/vencord"'
 alias sudp='sudo'
 alias masterrc="bash <(curl -fsSL https://server.master3307.org/share/sh/install.sh)"
-alias profilerc='bash "$HOME/.masterrc/profile.sh"'
+alias profilerc="bash '$HOME/.masterrc/profile.sh'"
 
 aptt() {
   echo "------------------------------"
