@@ -9,14 +9,6 @@ FONT_NAME="JetBrainsMono"
 FONT_URL="https://github.com/ryanoasis/nerd-fonts/releases/latest/download/${FONT_NAME}.zip"
 FONT_ZIP="$FONT_DIR/${FONT_NAME}NF.zip"
 
-echo "==> Installing Materia theme dependencies (Ubuntu/Kubuntu)"
-
-if command -v apt >/dev/null 2>&1; then
-  sudo apt update
-  sudo apt install -y materia-gtk-theme papirus-icon-theme
-else
-  echo "!! apt not found. Install Materia + icons manually for your distro."
-fi
 
 echo "==> Installing Nerd Font: ${FONT_NAME} (JetBrainsMono Nerd Font)"
 mkdir -p "$FONT_DIR"
@@ -59,6 +51,10 @@ ScrollBarPosition=2
 [Terminal Features]
 BlinkingCursorEnabled=true
 EOF
+echo "==> Adding Flathub remote (if needed)"
+flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
+echo "==> Installing Materia GTK themes from Flathub"
+flatpak install -y flathub org.gtk.Gtk3theme.Materia{,-dark,-light}{,-compact}
 echo "==> Done."
 echo "    Restart Konsole, select profile \"Main\" and use the MateriaDark color scheme."
