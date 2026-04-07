@@ -1,5 +1,5 @@
 
-# Please god review this code before you install it. Do not blame me for any damage!
+# Please god review this code before you install it. Don't blame me for any damage!
 
 You can use
 ```bash
