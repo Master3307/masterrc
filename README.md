@@ -1,3 +1,6 @@
+
+# Please god review this code before you install it. Do not blame me for any damage!
+
 You can use
 ```bash
 bash <(curl -fsSL https://raw.githubusercontent.com/Master3307/masterrc/refs/heads/master/install.sh)
