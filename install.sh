@@ -68,6 +68,6 @@ echo "    source ~/.bashrc"
 echo
 echo "... and have fun with whatever you just installed :3"
 echo
-echo ' i  Feel free to try "aptt" in a Terminal. It updates everything.'
+echo ' \033[34mi\033[0m  Feel free to try "aptt" in a Terminal. It updates everything.'
 echo '    You can also run "masterrc" to update the Script itself (it runs this again)'
 
