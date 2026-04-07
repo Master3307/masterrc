@@ -6,6 +6,32 @@ alias sudp='sudo'
 alias masterrc="bash <(curl -fsSL https://server.master3307.org/share/sh/install.sh)"
 alias profilerc="bash '$HOME/.masterrc/profile.sh'"
 
+discord-update() {
+  local api_url final_url remote_ver installed_ver tmp
+
+  api_url="https://discord.com/api/download/stable?platform=linux&format=deb"
+  installed_ver="$(dpkg-query -W -f='${Version}' discord 2>/dev/null || true)"
+  final_url="$(curl -fsSLI -o /dev/null -w '%{url_effective}' "$api_url")"
+  remote_ver="$(printf '%s\n' "$final_url" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n1)"
+
+  if [ -z "$remote_ver" ]; then
+    echo "Could not determine latest Discord version."
+    return 1
+  fi
+
+  if [ -n "$installed_ver" ] && dpkg --compare-versions "$installed_ver" ge "$remote_ver"; then
+    echo "Discord is already up to date ($installed_ver)."
+    return 0
+  fi
+
+  echo "New Discord version found: $remote_ver"
+  tmp="$(mktemp /tmp/discord-XXXXXX.deb)"
+  wget -q --show-progress "$api_url" -O "$tmp"
+  sudo apt install -y "$tmp"
+  rm -f "$tmp"
+}
+
+
 aptt() {
   echo "------------------------------"
   echo "Authenticating..."
@@ -21,6 +47,11 @@ aptt() {
   echo "Updating APT..."
   echo
   sudo apt update
+  echo
+  echo "------------------------------"
+  echo "Updating Discord..."
+  echo
+  sudo discord-update
   echo
   echo "------------------------------"
   echo "Doing upgrade..."
