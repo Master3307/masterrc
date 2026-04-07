@@ -63,12 +63,10 @@ aptt() {
 
   if [ -z "$remote_ver" ]; then
     echo "Could not determine latest Discord version."
-    return 1
   fi
 
   if [ -n "$installed_ver" ] && dpkg --compare-versions "$installed_ver" ge "$remote_ver"; then
     echo "Discord is already up to date ($installed_ver)."
-    return 0
   fi
 
   echo "New Discord version found: $remote_ver"
