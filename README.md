@@ -14,3 +14,16 @@ Also if you want it, you can use it yourself.
 All it does is Update stuff nicely and set my custom stuff in the bash.
 
 ![Preview](./preview.png "looks cool, right?")
+
+as you see it basically does following:
+```bash
+# the thing with the Penguin
+nerdfetch
+
+# The random fortune message (offensive ones included)
+fortune
+
+echo some text with neat animation
+
+echo some other text with neat animation
+```
