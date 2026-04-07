@@ -1,6 +1,6 @@
 You can use
 ```bash
-bash <(curl -fsSL https://server.master3307.org/share/sh/install.sh)
+bash <(curl -fsSL https://raw.githubusercontent.com/Master3307/masterrc/refs/heads/master/install.sh)
 ```
 to install it with one command.
 
