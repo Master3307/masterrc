@@ -15,7 +15,7 @@ aptt() {
   echo "------------------------------"
   echo "Updating Flatpak..."
   echo
-  flatpak update -y | awk '/end-of-life/ { skip=1 } skip && /^$/ { skip=0; next } !skip'
+  flatpak update --assumeyes --noninteractive | awk '/end-of-life/ { skip=1 } skip && /^$/ { skip=0; next } !skip'
   echo
   echo "------------------------------"
   echo "Updating APT..."
