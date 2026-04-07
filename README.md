@@ -18,7 +18,7 @@ All it does is Update stuff nicely and set my custom stuff in the bash.
 as you see it basically does following:
 ```bash
 # the thing with the Penguin
-nerdfetch
+sudo nerdfetch
 
 # The random fortune message (offensive ones included)
 fortune
