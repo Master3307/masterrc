@@ -55,6 +55,9 @@ aptt() {
   echo "Checking Discord..."
   echo
 
+  local api_url final_url remote_ver installed_ver tmp
+
+  api_url='https://discord.com/api/download/stable?platform=linux&format=deb'
   installed_ver="$(dpkg-query -W -f='${Version}' discord 2>/dev/null || true)"
   final_url="$(curl -fsSLI -o /dev/null --write-out '%{url_effective}' "$api_url")" || return 1
   remote_ver="$(grep -oE '[0-9]+\.[0-9]+\.[0-9]+' <<< "$final_url" | head -n1)"
