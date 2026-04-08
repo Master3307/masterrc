@@ -6,6 +6,20 @@ alias vencord='echo Starting Vencord installer... && echo Elevating with sudo...
 alias sudp='sudo'
 alias masterrc="bash <(curl -fsSL https://raw.githubusercontent.com/Master3307/masterrc/refs/heads/master/install.sh)"
 alias profilerc="bash '$HOME/.masterrc/profile.sh'"
+alias la="ls -a"
+alias sl="ls"
+alias bye-bye="poweroff"
+alias yodel="echo"
+
+# hacker-mode
+alias hack-install="sudo apt install cmatrix"
+alias btop-install="sudo apt install btop"
+alias hack="cmatrix"
+alias hacking="cmatrix"
+alias hacker-mode="cmatrix"
+alias hacker-interface="btop"
+
+
 
 # Discord update command
 discord-update() {
@@ -128,13 +142,9 @@ qmsg=$'\033[0;36mWhat magical thing might you do today?\033[0m'
 echo
 sudo nerdfetch
 echo
-fortune -a
+/usr/games/fortune -a
 echo
 echo
 typewriter "$msg" 0.01
 echo
 rand_typewriter "$qmsg" 0.01
-
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
