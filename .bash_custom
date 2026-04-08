@@ -35,11 +35,12 @@ spinner() {
 }
 
 hack-install() {
+  set +m   # disable job control messages
   echo Verify...
   sudo -v
   sudo apt install cmatrix btop -y > /dev/null 2>&1 </dev/null
   echo
-  ( sleep 3 ) &
+  ( sleep 6 ) &
   spinner $! Installing...
   echo
   echo Successfully installed Hacking Tools!
