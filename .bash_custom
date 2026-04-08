@@ -55,24 +55,30 @@ aptt() {
   echo "Checking Discord..."
   echo
 
-  local api_url final_url remote_ver installed_ver tmp
+  local api_url final_url remote_ver installed_ver installed_status tmp
 
   api_url='https://discord.com/api/download/stable?platform=linux&format=deb'
-  installed_ver="$(dpkg-query -W -f='${Version}' discord 2>/dev/null || true)"
-  final_url="$(curl -fsSLI -o /dev/null --write-out '%{url_effective}' "$api_url")" || return 1
-  remote_ver="$(grep -oE '[0-9]+\.[0-9]+\.[0-9]+' <<< "$final_url" | head -n1)"
+  installed_status="$(dpkg-query -W -f='${Status}' discord 2>/dev/null || true)"
 
-  if [ -z "$remote_ver" ]; then
-    echo "Could not determine latest Discord version."
-    return 1
-  elif [ -n "$installed_ver" ] && dpkg --compare-versions "$installed_ver" eq "$remote_ver"; then
-    echo "Discord is already up to date ($installed_ver)."
+  if [ "$installed_status" != "install ok installed" ]; then
+    echo "Discord is not installed. Skipping Discord update."
   else
-    echo "Installing Discord $remote_ver..."
-    tmp="$(mktemp /tmp/discord-XXXXXX.deb)" || return 1
-    wget -q --show-progress "$api_url" -O "$tmp" || { rm -f "$tmp"; return 1; }
-    sudo apt install -y "$tmp" || { rm -f "$tmp"; return 1; }
-    rm -f "$tmp"
+    installed_ver="$(dpkg-query -W -f='${Version}' discord 2>/dev/null || true)"
+    final_url="$(command curl -fsSI -L "$api_url" | awk 'BEGIN{IGNORECASE=1} /^location:/ {print $2}' | tail -n1 | tr -d '\r')" || return 1
+    remote_ver="$(grep -oE '[0-9]+\.[0-9]+\.[0-9]+' <<< "$final_url" | head -n1)"
+
+    if [ -z "$remote_ver" ]; then
+      echo "Could not determine latest Discord version."
+      return 1
+    elif dpkg --compare-versions "$installed_ver" eq "$remote_ver"; then
+      echo "Discord is already up to date ($installed_ver)."
+    else
+      echo "Installing Discord $remote_ver..."
+      tmp="$(mktemp /tmp/discord-XXXXXX.deb)" || return 1
+      wget -q --show-progress "$api_url" -O "$tmp" || { rm -f "$tmp"; return 1; }
+      sudo apt install -y "$tmp" || { rm -f "$tmp"; return 1; }
+      rm -f "$tmp"
+    fi
   fi
 
   echo
