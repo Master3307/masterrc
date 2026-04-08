@@ -12,13 +12,39 @@ alias bye-bye="poweroff"
 alias yodel="echo"
 
 # hacker-mode
-alias hack-install="sudo apt install cmatrix"
 alias btop-install="sudo apt install btop"
 alias hack="cmatrix"
 alias hacking="cmatrix"
+alias hacker="cmatrix"
 alias hacker-mode="cmatrix"
 alias hacker-interface="btop"
 
+# hacker tool install
+spinner() {
+  local pid=$1 msg=$2
+  local spin='⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏'
+  local i=0
+
+  tput civis 2>/dev/null || true
+  while kill -0 "$pid" 2>/dev/null; do
+    printf "\r%s %s" "${spin:i++%${#spin}:1}" "$msg"
+    sleep 0.1
+  done
+  printf "\r%*s\r" $(( ${#msg} + 2 )) ""
+  tput cnorm 2>/dev/null || true
+}
+
+hack-install() {
+  echo Verify...
+  sudo -v
+  sudo apt install cmatrix btop -y > /dev/null 2>&1 </dev/null
+  echo
+  ( sleep 3 ) &
+  spinner $! Installing...
+  echo
+  echo Successfully installed Hacking Tools!
+
+}
 
 
 # Discord update command
