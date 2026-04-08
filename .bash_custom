@@ -39,34 +39,36 @@ aptt() {
   echo "------------------------------"
   echo "Authenticating..."
   echo
-  sudo -v
+  sudo -v || return 1
   echo
   echo "------------------------------"
   echo "Updating Flatpak..."
   echo
-  flatpak update --assumeyes --noninteractive | awk '/end-of-life/ { skip=1 } skip && /^$/ { skip=0; next } !skip'
+  flatpak update -y --noninteractive | awk '/end-of-life/ { skip=1 } skip && /^$/ { skip=0; next } !skip'
   echo
   echo "------------------------------"
   echo "Updating APT..."
   echo
-  sudo apt update
+  sudo apt update || return 1
   echo
   echo "------------------------------"
-  echo "Updating Discord..."
+  echo "Checking Discord..."
   echo
-  local api_url final_url remote_ver installed_ver tmp
 
-  api_url="https://discord.com/api/download/stable?platform=linux&format=deb"
   installed_ver="$(dpkg-query -W -f='${Version}' discord 2>/dev/null || true)"
-  final_url="$(curl -fsSLI -o /dev/null -w '%{url_effective}' "$api_url")"
-  remote_ver="$(printf '%s\n' "$final_url" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n1)"
+  final_url="$(curl -fsSLI -o /dev/null -w '%{url_effective}' "$api_url")" || return 1
+  remote_ver="$(grep -oE '[0-9]+\.[0-9]+\.[0-9]+' <<< "$final_url" | head -n1)"
 
   if [ -z "$remote_ver" ]; then
     echo "Could not determine latest Discord version."
-  fi
-# todo: fix this fucking shit.
-  if [ -n "$installed_ver" ] && dpkg --compare-versions "$installed_ver" ge "$remote_ver"; then
+  elif [ -n "$installed_ver" ] && dpkg --compare-versions "$installed_ver" eq "$remote_ver"; then
     echo "Discord is already up to date ($installed_ver)."
+  else
+    echo "Installing Discord $remote_ver..."
+    tmp="$(mktemp /tmp/discord-XXXXXX.deb)" || return 1
+    wget -q --show-progress "$api_url" -O "$tmp" || { rm -f "$tmp"; return 1; }
+    sudo apt install -y "$tmp" || { rm -f "$tmp"; return 1; }
+    rm -f "$tmp"
   fi
 
   echo "New Discord version found: $remote_ver"
@@ -78,12 +80,17 @@ aptt() {
   echo "------------------------------"
   echo "Doing upgrade..."
   echo
-  sudo apt upgrade
+  sudo apt upgrade || return 1
   echo
   echo "------------------------------"
   echo "Doing full-upgrade..."
   echo
-  sudo apt full-upgrade
+  sudo apt full-upgrade || return 1
+  echo
+  echo "------------------------------"
+  echo "Doing autoremove..."
+  echo
+  sudo apt autoremove
 }
 
 typewriter() {
