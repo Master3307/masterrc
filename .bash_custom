@@ -61,6 +61,7 @@ aptt() {
 
   if [ -z "$remote_ver" ]; then
     echo "Could not determine latest Discord version."
+    return 1
   elif [ -n "$installed_ver" ] && dpkg --compare-versions "$installed_ver" eq "$remote_ver"; then
     echo "Discord is already up to date ($installed_ver)."
   else
@@ -71,11 +72,6 @@ aptt() {
     rm -f "$tmp"
   fi
 
-  echo "New Discord version found: $remote_ver"
-  tmp="$(mktemp /tmp/discord-XXXXXX.deb)"
-  wget -q --show-progress "$api_url" -O "$tmp"
-  sudo apt install -y "$tmp"
-  rm -f "$tmp"
   echo
   echo "------------------------------"
   echo "Doing upgrade..."
