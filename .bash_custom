@@ -40,11 +40,20 @@ hack-install() {
   sudo -v
   sudo apt install cmatrix btop -y > /dev/null 2>&1 </dev/null
   echo
-  ( sleep 6 ) &
+  ( sleep 10 ) &
   spinner $! Installing...
+  clear
   echo
-  echo Successfully installed Hacking Tools!
-
+  echo
+  echo -----------------------------------------------------
+  echo
+  echo Successfully installed and enabled all Hacking Tools!
+  echo         use: hack, hacking, hacker-interface
+  echo
+  echo -----------------------------------------------------
+  echo
+  echo
+  echo
 }
 
 
