@@ -47,6 +47,7 @@ BG_BLUE='\e[44m'
 BG_PURPLE='\e[45m'
 BG_CYAN='\e[46m'
 BG_WHITE='\e[47m'
+BG_GREY='\e[100m'   # bright black / grey
 
 # High-intensity (bright) foregrounds
 I_BLACK='\e[0;90m'
