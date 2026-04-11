@@ -175,7 +175,7 @@ aptt() {
 
   printf -- "\n${CYAN}------------------------------\n"
   printf "Refreshing Snap...\n\n"
-  sudo snap refresh || return 1
+  sudo snap refresh
 
   printf -- "\n${BLUE}------------------------------\n"
   printf "Checking Discord...\n\n"
