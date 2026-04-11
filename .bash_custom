@@ -345,6 +345,7 @@ welcome() {
 }
 
 alias welcum="clear && welcome"
+alias updates="aptt"
 
 welcome # dear user :3
 # You are so great :D
