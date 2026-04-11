@@ -203,8 +203,9 @@ aptt() {
   printf -- "\n${RED}------------------------------\n"
   printf "Authenticating...\n\n"
   sudo -v
-
-  nerdfetch_nopasswd
+  if has_cmd nerdfetch /usr/bin/nerdfetch; then
+    nerdfetch_nopasswd
+  fi
 
   printf -- "\n${YELLOW}------------------------------\n"
   printf "Updating Flatpak...\n\n"
