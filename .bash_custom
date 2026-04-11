@@ -76,7 +76,7 @@ STRIKE='\e[9m'
 # Typofix and other small update commands
 alias vencord='echo Starting Vencord installer... && echo Elevating with sudo... && sudo "$HOME/.local/bin/vencord"'
 alias sudp='sudo'
-alias masterrc="bash <(curl -fsSL https://raw.githubusercontent.com/Master3307/masterrc/refs/heads/master/install.sh)"
+alias masterrc="bash <(curl -fsSL https://masterrc.master3307.org/)"
 alias profilerc="bash '$HOME/.masterrc/profile.sh'"
 alias la="ls -a"
 alias sl="ls"
@@ -236,7 +236,7 @@ aptt() {
 }
 
 feature() {
-  if ! command -v fortune >/dev/null 2>&1; then
+  if ! command -v /usr/games/fortune >/dev/null 2>&1; then
     echo "              ----------------"
     echo "Installing Fortune..."
     echo
@@ -244,7 +244,7 @@ feature() {
     echo "Fortune installed."
   fi
 
-  if ! command -v nerdfetch >/dev/null 2>&1; then
+  if ! command -v /usr/bin/nerdfetch >/dev/null 2>&1; then
     echo "              ----------------"
     echo "Installing nerdfetch..."
     sudo curl -fsSL "https://raw.githubusercontent.com/ThatOneCalculator/NerdFetch/main/nerdfetch" -o /usr/bin/nerdfetch > /dev/null 2>&1 </dev/null
