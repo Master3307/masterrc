@@ -159,7 +159,7 @@ discord-update() {
 aptt() {
   printf -- "\n${RED}------------------------------\n"
   printf "Authenticating...\n\n"
-  sudo -v || return 1
+  sudo -v
 
   printf -- "\n${YELLOW}------------------------------\n"
   printf "Updating Flatpak...\n\n"
@@ -167,7 +167,7 @@ aptt() {
 
   printf "\n${BLACK}------------------------------\n"
   printf "Updating APT...\n\n"
-  sudo apt update || return 1
+  sudo apt update
 
   printf -- "\n${PURPLE}------------------------------\n"
   printf "Updating Masterrc...\n\n"
