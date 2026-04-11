@@ -12,24 +12,25 @@ BASHRC_FILE="$HOME/.bashrc"
 SOURCE_LINE='[ -f "$HOME/.bash_custom" ] && source "$HOME/.bash_custom"'
 
 echo "              -------------------"
-echo "Installing dependencies (flatpak, fortune-mod, nerdfetch)..."
+echo "Installing Fortune..."
 echo
 
 if command -v apt >/dev/null 2>&1; then
-  sudo apt install -y fortune-mod
+  sudo apt install -y fortune-mod > /dev/null 2>&1 </dev/null
+  echo "Fortune installed."
 else
-  echo "Failed"
+  echo "Already installed."
 fi
 
 if ! command -v nerdfetch >/dev/null 2>&1; then
   echo "              -------------------"
   echo "Installing nerdfetch..."
-  sudo curl -fsSL "https://raw.githubusercontent.com/ThatOneCalculator/NerdFetch/main/nerdfetch" -o /usr/bin/nerdfetch
-  sudo chmod u+x /usr/bin/nerdfetch
+  sudo curl -fsSL "https://raw.githubusercontent.com/ThatOneCalculator/NerdFetch/main/nerdfetch" -o /usr/bin/nerdfetch > /dev/null 2>&1 </dev/null
+  sudo chmod u+x /usr/bin/nerdfetch > /dev/null 2>&1 </dev/null
   echo
+  echo "Nerdfetch installed."
 else
-  echo
-  echo "nerdfetch already installed."
+  echo "Already installed."
 fi
 
 echo "              -------------------"
@@ -54,12 +55,12 @@ if ! grep -Fqx "$SOURCE_LINE" "$BASHRC_FILE"; then
   echo "Added source line to ~/.bashrc"
   echo
 else
-  echo "Source line already present in ~/.bashrc"
+  echo "Source line already in ~/.bashrc"
   echo
 fi
 
 echo "              -------------------"
-echo "Done. Reload your shell with:"
+echo "Done, Installed/Updated masterrc. Reload your shell with:"
 echo "    source ~/.bashrc"
 echo
 echo "... and have fun with whatever you just installed :3"
