@@ -45,6 +45,10 @@ hack-install() {
   clear
   echo
   echo
+  echo
+  echo
+  echo
+  echo
   echo -----------------------------------------------------
   echo
   echo Successfully installed and enabled all Hacking Tools!
@@ -54,8 +58,16 @@ hack-install() {
   echo
   echo
   echo
+  echo
+  echo
+  echo
 }
 
+alias hack-tools="hack-install"
+alias hackers="hack-install"
+alias hack-device="hack-install"
+alias hacker-install="hack-install"
+alias hacking-install="hack-install"
 
 # Discord update command
 discord-update() {
@@ -100,6 +112,11 @@ aptt() {
   echo "Updating APT..."
   echo
   sudo apt update || return 1
+  echo
+  echo "------------------------------"
+  echo "Refreshing Snap..."
+  echo
+  sudo snap refresh || return 1
   echo
   echo "------------------------------"
   echo "Checking Discord..."
