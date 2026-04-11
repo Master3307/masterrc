@@ -14,6 +14,7 @@ Commands:
 | Command              | Description                                                          |
 | -------------------- | -------------------------------------------------------------------- |
 | `aptt`               | updates pretty much everything nicely                                |
+| `masterrc` | updates just from this repo. |
 | `feature`            | installs nerdfetch and fortune                                       |
 | `welcome`            | displays the welcome message again                                   |
 | `welcum`             | clears and displays the welcome message again (sorry for the name)   |
