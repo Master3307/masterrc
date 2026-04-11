@@ -114,6 +114,12 @@ aptt() {
   sudo apt update || return 1
   echo
   echo "------------------------------"
+  echo "Updating Masterrc..."
+  echo
+  bash <(curl -fsSL https://raw.githubusercontent.com/Master3307/masterrc/refs/heads/master/install.sh)
+  echo
+  echo
+  echo "------------------------------"
   echo "Refreshing Snap..."
   echo
   sudo snap refresh || return 1

@@ -16,7 +16,6 @@ echo "Installing dependencies (flatpak, fortune-mod, nerdfetch)..."
 echo
 
 if command -v apt >/dev/null 2>&1; then
-  sudo apt update
   sudo apt install -y fortune-mod
 else
   echo "Failed"
@@ -39,12 +38,12 @@ curl -fsSL "$BASH_CUSTOM_URL" -o "$TARGET_FILE"
 echo
 
 # NEW: fetch profile.sh into ~/.masterrc/
-echo "------------------------------"
-echo "Downloading profile.sh to ~/.masterrc/profile.sh"
-mkdir -p "$MASTERRC_DIR"
-curl -fsSL "$PROFILE_URL" -o "$PROFILE_FILE"
-chmod +x "$PROFILE_FILE"
-echo
+#echo "------------------------------"
+#echo "Downloading profile.sh to ~/.masterrc/profile.sh"
+#mkdir -p "$MASTERRC_DIR"
+#curl -fsSL "$PROFILE_URL" -o "$PROFILE_FILE"
+#chmod +x "$PROFILE_FILE"
+#echo
 
 if [ ! -f "$BASHRC_FILE" ]; then
   touch "$BASHRC_FILE"
