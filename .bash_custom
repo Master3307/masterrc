@@ -255,8 +255,8 @@ feature() {
     printf "\nNow run ${PURPLE}welcome${R} to see what changed :3"
   fi
 
-  if command -v fortune >/dev/null 2>&1; then
-      if  command -v fortune >/dev/null 2>&1; then
+  if command -v /usr/games/fortune >/dev/null 2>&1; then
+      if  command -v /usr/bin/nerdfetch >/dev/null 2>&1; then
         printf "\nFeatures already installed, run ${PURPLE}welcome${R} to see what is is :3\n\n"
       fi
   fi
