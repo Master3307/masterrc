@@ -19,8 +19,6 @@ if ! command -v fortune >/dev/null 2>&1; then
   echo
   sudo apt install -y fortune-mod > /dev/null 2>&1 </dev/null
   echo "Fortune installed."
-else
-  echo
 fi
 
 if ! command -v nerdfetch >/dev/null 2>&1; then
@@ -30,8 +28,6 @@ if ! command -v nerdfetch >/dev/null 2>&1; then
   sudo chmod u+x /usr/bin/nerdfetch > /dev/null 2>&1 </dev/null
   echo
   echo "Nerdfetch installed."
-else
-  echo
 fi
 
 echo
