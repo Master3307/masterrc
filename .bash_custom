@@ -2,7 +2,7 @@
 # MrKoby07 was hereee
 
 # custom PS1 line:
-PS1='\[\e[38;5;208m\]\u\[\e[0m\]\[\e[1;31m\]@\[\e[0m\]\[\e[1;34m\]\h\[\e[0m\]\[\e[1;32m\]:\[\e[0m\]\[\e[1;35m\]\w\[\e[0m\]\[\e[1;36m\]\$\[\e[0m\] '
+PS1='\[\e[1;33m\]< \[\e[0m\]\[\e[1;32m\]\u\[\e[0m\]\[\e[1;31m\]@\[\e[0m\]\[\e[1;34m\]\h\[\e[0m\]\[\e[1;33m\] > \[\e[0m\]\[\e[1;35m\]\w\[\e[0m\]\[\e[1;30m\] \$\[\e[0m\] '
 
 # Colors
 # Reset
@@ -311,7 +311,7 @@ welcome() {
   printf "\n"
   if command -v /usr/games/fortune >/dev/null 2>&1; then
     /usr/games/fortune -a
-    printf "\n\n"
+    printf "\n\n\n"
   fi
 
   # Message 1
@@ -320,7 +320,7 @@ welcome() {
   while IFS= read -r -n1 char; do
     printf "%s" "$char"
     sleep "$delay"
-  done <<< "$(printf '\033[31m- \033[0;33mWelcome to the Terminal \033[1;35m%s\033[0m \033[31m-\033[0m' "${USER}\n")"
+  done <<< "$(printf '\033[31m- \033[0;33mWelcome to the Terminal \033[1;35m%s\033[0m \033[31m-\033[0m' "${USER}")"
   printf "\n"
 
   # Message 2
@@ -330,8 +330,7 @@ welcome() {
     printf "%s" "$char"
     sleep "$delay"
   done <<< "$(printf "\033[0;36mWhat magical thing might you do today?\033[0m")"
-  printf "\n"
-  printf "The Power of "
+  printf "\n\n"
 
 }
 
