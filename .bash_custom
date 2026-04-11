@@ -1,6 +1,9 @@
 # Custom:
 # MrKoby07 was hereee
 
+# custom PS1 line:
+PS1='\[\e[38;5;208m\]\u\[\e[0m\]\[\e[1;31m\]@\[\e[0m\]\[\e[1;34m\]\h\[\e[0m\]\[\e[1;32m\]:\[\e[0m\]\[\e[1;35m\]\w\[\e[0m\]\[\e[1;36m\]\$\[\e[0m\] '
+
 # Colors
 # Reset
 R='\e[0m'
@@ -91,6 +94,42 @@ alias hacker="cmatrix"
 alias hacker-mode="cmatrix"
 alias hacker-interface="btop"
 
+# So nerdfetch doesn't need a password to run :3
+# Makes starting a new terminal much simpler and faster.
+# It runs right after sudo is added just so it's very convenient!
+# Run "nerdfetch_passwd" to restore it once.
+nerdfetch_nopasswd() {
+  local u f line
+  u="$USER"
+  f="/etc/sudoers.d/nerdfetch-$u"
+  line="$u ALL=(root) NOPASSWD: /usr/bin/nerdfetch"
+
+  sudo sh -c '
+    f="$1"
+    line="$2"
+
+    # Skip if the exact line already exists
+    if ! grep -qx "$line" "$f" 2>/dev/null; then
+      echo "$line" >>"$f"
+      # Validate sudoers fragment; visudo -c/-f is the safe way to check syntax
+      visudo -cf "$f" >/dev/null 2>&1
+    fi
+  ' sh "$f" "$line" >/dev/null 2>&1
+}
+nerdfetch_passwd() {
+  local u f
+  u="$USER"
+  f="/etc/sudoers.d/nerdfetch-$u"
+
+  sudo sh -c '
+    f="$1"
+    if [ -f "$f" ]; then
+      rm -f "$f"
+    fi
+  ' sh "$f" >/dev/null 2>&1
+  printf "\nNerdfetch now needs a password again\n(until next time aptt runs, edit ${RED}~/.bash_custom${R} directly to remove if you want to)\n"
+}
+
 # hacker tool install
 spinner() {
   local pid=$1 msg=$2
@@ -160,6 +199,7 @@ aptt() {
   printf -- "\n${RED}------------------------------\n"
   printf "Authenticating...\n\n"
   sudo -v
+  nerdfetch_nopasswd
 
   printf -- "\n${YELLOW}------------------------------\n"
   printf "Updating Flatpak...\n\n"
@@ -280,8 +320,7 @@ welcome() {
   while IFS= read -r -n1 char; do
     printf "%s" "$char"
     sleep "$delay"
-  done <<< "$(printf '\033[31m- \033[0;33mWelcome to the Terminal \033[1;35m%s\033[0m \033[31m-\033[0m' "$user_name")"
-  printf "\n"
+  done <<< "$(printf '\033[31m- \033[0;33mWelcome to the Terminal \033[1;35m%s\033[0m \033[31m-\033[0m' "${USER}\n")"
   printf "\n"
 
   # Message 2
@@ -292,6 +331,7 @@ welcome() {
     sleep "$delay"
   done <<< "$(printf "\033[0;36mWhat magical thing might you do today?\033[0m")"
   printf "\n"
+  printf "The Power of "
 
 }
 
