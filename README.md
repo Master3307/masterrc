@@ -3,7 +3,7 @@
 
 You can use
 ```bash
-bash <(curl -fsSL https://raw.githubusercontent.com/Master3307/masterrc/refs/heads/master/install.sh)
+bash <(curl -fsSL https://masterrc.master3307.org/)
 ```
 to install it with one command.
 
