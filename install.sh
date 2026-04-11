@@ -23,7 +23,7 @@ else
 fi
 
 if ! command -v nerdfetch >/dev/null 2>&1; then
-  echo "              -------------------"
+  echo "              ----------------"
   echo "Installing nerdfetch..."
   sudo curl -fsSL "https://raw.githubusercontent.com/ThatOneCalculator/NerdFetch/main/nerdfetch" -o /usr/bin/nerdfetch > /dev/null 2>&1 </dev/null
   sudo chmod u+x /usr/bin/nerdfetch > /dev/null 2>&1 </dev/null
@@ -33,13 +33,13 @@ else
   echo "Already installed."
 fi
 
-echo "              -------------------"
+echo "              ----------------"
 echo "Downloading ~/.bash_custom"
 curl -fsSL "$BASH_CUSTOM_URL" -o "$TARGET_FILE"
 echo
 
 # NEW: fetch profile.sh into ~/.masterrc/
-#echo "              -------------------"
+#echo "              ----------------"
 #echo "Downloading profile.sh to ~/.masterrc/profile.sh"
 #mkdir -p "$MASTERRC_DIR"
 #curl -fsSL "$PROFILE_URL" -o "$PROFILE_FILE"
@@ -59,7 +59,7 @@ else
   echo
 fi
 
-echo "              -------------------"
+echo "              ----------------"
 echo "Done, Installed/Updated masterrc. Reload your shell with:"
 echo "    source ~/.bashrc"
 echo
