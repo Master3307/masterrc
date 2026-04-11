@@ -94,6 +94,10 @@ alias hacker="cmatrix"
 alias hacker-mode="cmatrix"
 alias hacker-interface="btop"
 
+has_cmd() {
+  command -v "$1" >/dev/null 2>&1 || command -v "$2" >/dev/null 2>&1
+}
+
 # So nerdfetch doesn't need a password to run :3
 # Makes starting a new terminal much simpler and faster.
 # It runs right after sudo is added just so it's very convenient!
@@ -199,6 +203,7 @@ aptt() {
   printf -- "\n${RED}------------------------------\n"
   printf "Authenticating...\n\n"
   sudo -v
+
   nerdfetch_nopasswd
 
   printf -- "\n${YELLOW}------------------------------\n"
@@ -276,7 +281,8 @@ aptt() {
 }
 
 feature() {
-  if ! command -v /usr/games/fortune >/dev/null 2>&1; then
+  # Install fortune if missing
+  if ! has_cmd fortune /usr/games/fortune; then
     echo "              ----------------"
     echo "Installing Fortune..."
     echo
@@ -284,10 +290,12 @@ feature() {
     echo "Fortune installed."
   fi
 
-  if ! command -v /usr/bin/nerdfetch >/dev/null 2>&1; then
+  # Install nerdfetch if missing
+  if ! has_cmd nerdfetch /usr/bin/nerdfetch; then
     echo "              ----------------"
     echo "Installing nerdfetch..."
-    sudo curl -fsSL "https://raw.githubusercontent.com/ThatOneCalculator/NerdFetch/main/nerdfetch" -o /usr/bin/nerdfetch > /dev/null 2>&1 </dev/null
+    sudo curl -fsSL "https://raw.githubusercontent.com/ThatOneCalculator/NerdFetch/main/nerdfetch" \
+      -o /usr/bin/nerdfetch > /dev/null 2>&1 </dev/null
     sudo chmod u+x /usr/bin/nerdfetch > /dev/null 2>&1 </dev/null
     echo
     echo "Nerdfetch installed."
@@ -295,28 +303,30 @@ feature() {
     printf "\nNow run ${PURPLE}welcome${R} to see what changed :3"
   fi
 
-  if command -v /usr/games/fortune >/dev/null 2>&1; then
-      if  command -v /usr/bin/nerdfetch >/dev/null 2>&1; then
-        printf "\nFeatures already installed, run ${PURPLE}welcome${R} to see what is is :3\n\n"
-      fi
+  # Both present → info message
+  if has_cmd fortune /usr/games/fortune && has_cmd nerdfetch /usr/bin/nerdfetch; then
+    printf "\nFeatures already installed, run ${PURPLE}welcome${R} to see what it is :3\n\n"
   fi
 }
 
 
 welcome() {
   printf "\n"
-  if command -v /usr/bin/nerdfetch >/dev/null 2>&1; then
-    sudo nerdfetch
+
+  if has_cmd nerdfetch /usr/bin/nerdfetch; then
+    sudo /usr/bin/nerdfetch
   fi
+
   printf "\n"
-  if command -v /usr/games/fortune >/dev/null 2>&1; then
+
+  if has_cmd fortune /usr/games/fortune; then
     /usr/games/fortune -a
     printf "\n\n\n"
   fi
 
   # Message 1
   local delay="${2:-0.01}"
-  local i char
+  local char
   while IFS= read -r -n1 char; do
     printf "%s" "$char"
     sleep "$delay"
@@ -324,17 +334,15 @@ welcome() {
   printf "\n"
 
   # Message 2
-  local delay="${2:-0.01}"
-  local i char
+  delay="${2:-0.01}"
   while IFS= read -r -n1 char; do
     printf "%s" "$char"
     sleep "$delay"
-  done <<< "$(printf "\033[0;36mWhat magical thing might you do today?\033[0m")"
+  done <<< "$(printf '\033[0;36mWhat magical thing might you do today?\033[0m')"
   printf "\n\n"
-
 }
 
-
+alias welcum="clear && welcome"
 
 welcome # dear user :3
 # You are so great :D
