@@ -11,15 +11,16 @@ PROFILE_FILE="$MASTERRC_DIR/profile.sh"
 BASHRC_FILE="$HOME/.bashrc"
 SOURCE_LINE='[ -f "$HOME/.bash_custom" ] && source "$HOME/.bash_custom"'
 
-echo "              -------------------"
-echo "Installing Fortune..."
-echo
 
-if command -v apt >/dev/null 2>&1; then
+
+if ! command -v fortune >/dev/null 2>&1; then
+  echo "              ----------------"
+  echo "Installing Fortune..."
+  echo
   sudo apt install -y fortune-mod > /dev/null 2>&1 </dev/null
   echo "Fortune installed."
 else
-  echo "Already installed."
+  echo
 fi
 
 if ! command -v nerdfetch >/dev/null 2>&1; then
@@ -30,9 +31,10 @@ if ! command -v nerdfetch >/dev/null 2>&1; then
   echo
   echo "Nerdfetch installed."
 else
-  echo "Already installed."
+  echo
 fi
 
+echo
 echo "              ----------------"
 echo "Downloading ~/.bash_custom"
 curl -fsSL "$BASH_CUSTOM_URL" -o "$TARGET_FILE"
