@@ -80,7 +80,7 @@ STRIKE='\e[9m'
 # Typofix and other small update commands
 alias vencord='echo Starting Vencord installer... && echo Elevating with sudo... && sudo "$HOME/.local/bin/vencord"'
 alias sudp='sudo'
-alias masterrc="bash <(curl -fsSL https://masterrc.master3307.org/)"
+alias masterrc="curl -fsSL https://masterrc.master3307.org/ | bash"
 alias profilerc="bash '$HOME/.masterrc/profile.sh'"
 alias la="ls -a"
 alias sl="ls"
@@ -198,28 +198,37 @@ discord-install() { # Discord install command
 
 
 discord-update() { # Discord update command
-  local api_url final_url remote_ver installed_ver tmp
 
-  api_url="https://discord.com/api/download/stable?platform=linux&format=deb"
-  installed_ver="$(dpkg-query -W -f='${Version}' discord 2>/dev/null || true)"
-  final_url="$(curl -fsSLI -o /dev/null -w '%{url_effective}' "$api_url")"
-  remote_ver="$(printf '%s\n' "$final_url" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -n1)"
 
-  if [ -z "$remote_ver" ]; then
-    echo "Could not determine latest Discord version."
-    return 1
-  fi
+    printf -- "\n${BLUE}------------------------------\n"
+    printf "Checking Discord...\n\n"
 
-  if [ -n "$installed_ver" ] && dpkg --compare-versions "$installed_ver" ge "$remote_ver"; then
-    echo "Discord is already up to date ($installed_ver)."
-    return 0
-  fi
+    local api_url final_url remote_ver installed_ver installed_status tmp
 
-  echo "New Discord version found: $remote_ver"
-  tmp="$(mktemp /tmp/discord-XXXXXX.deb)"
-  wget -q --show-progress "$api_url" -O "$tmp"
-  sudo apt install -y "$tmp"
-  rm -f "$tmp"
+    api_url='https://discord.com/api/download/stable?platform=linux&format=deb'
+    installed_status="$(dpkg-query -W -f='${Status}' discord 2>/dev/null || true)"
+
+    if [ "$installed_status" != "install ok installed" ]; then
+      echo "Discord is not installed. Skipping Discord update."
+    else
+      installed_ver="$(dpkg-query -W -f='${Version}' discord 2>/dev/null || true)"
+      final_url="$(command curl -fsSI -L "$api_url" | awk 'BEGIN{IGNORECASE=1} /^location:/ {print $2}' | tail -n1 | tr -d '\r')" || return 1
+      remote_ver="$(grep -oE '[0-9]+\.[0-9]+\.[0-9]+' <<< "$final_url" | head -n1)"
+
+      if [ -z "$remote_ver" ]; then
+        echo "Could not determine latest Discord version."
+        return 1
+      elif dpkg --compare-versions "$installed_ver" eq "$remote_ver"; then
+        echo "Discord is already up to date ($installed_ver)."
+      else
+        echo "Installing Discord $remote_ver..."
+        tmp="$(mktemp /tmp/discord-XXXXXX.deb)" || return 1
+        wget -q --show-progress "$api_url" -O "$tmp" || { rm -f "$tmp"; return 1; }
+        sudo apt install -y "$tmp" || { rm -f "$tmp"; return 1; }
+        rm -f "$tmp"
+      fi
+    fi
+
 }
 
 
@@ -271,36 +280,11 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
   printf "Updating Masterrc...\n\n"
   bash <(curl -fsSL https://raw.githubusercontent.com/Master3307/masterrc/refs/heads/master/install.sh)
 
+  # Discord update
   if has_cmd /usr/bin/discord discord; then
-    printf -- "\n${BLUE}------------------------------\n"
-    printf "Checking Discord...\n\n"
-
-    local api_url final_url remote_ver installed_ver installed_status tmp
-
-    api_url='https://discord.com/api/download/stable?platform=linux&format=deb'
-    installed_status="$(dpkg-query -W -f='${Status}' discord 2>/dev/null || true)"
-
-    if [ "$installed_status" != "install ok installed" ]; then
-      echo "Discord is not installed. Skipping Discord update."
-    else
-      installed_ver="$(dpkg-query -W -f='${Version}' discord 2>/dev/null || true)"
-      final_url="$(command curl -fsSI -L "$api_url" | awk 'BEGIN{IGNORECASE=1} /^location:/ {print $2}' | tail -n1 | tr -d '\r')" || return 1
-      remote_ver="$(grep -oE '[0-9]+\.[0-9]+\.[0-9]+' <<< "$final_url" | head -n1)"
-
-      if [ -z "$remote_ver" ]; then
-        echo "Could not determine latest Discord version."
-        return 1
-      elif dpkg --compare-versions "$installed_ver" eq "$remote_ver"; then
-        echo "Discord is already up to date ($installed_ver)."
-      else
-        echo "Installing Discord $remote_ver..."
-        tmp="$(mktemp /tmp/discord-XXXXXX.deb)" || return 1
-        wget -q --show-progress "$api_url" -O "$tmp" || { rm -f "$tmp"; return 1; }
-        sudo apt install -y "$tmp" || { rm -f "$tmp"; return 1; }
-        rm -f "$tmp"
-      fi
-    fi
+    discord-update
   fi
+
   # Finishing APT upgrades
   if has_cmd /usr/bin/apt apt; then
     printf -- "\n${GREEN}------------------------------\n"
