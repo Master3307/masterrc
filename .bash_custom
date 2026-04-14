@@ -210,7 +210,7 @@ aptt() {
 
   printf -- "\n${YELLOW}------------------------------\n"
   printf "Updating Flatpak...\n\n"
-  flatpak update -y --noninteractive | awk '/end-of-life/ { skip=1 } skip && /^$/ { skip=0; next } !skip'
+  flatpak update
 
   printf "\n${BLACK}------------------------------\n"
   printf "Updating APT...\n\n"
