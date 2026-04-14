@@ -99,6 +99,10 @@ has_cmd() {
   command -v "$1" >/dev/null 2>&1 || command -v "$2" >/dev/null 2>&1
 }
 
+sudo_nopass() {
+    sudo -n true 2>/dev/null
+}
+
 # So nerdfetch doesn't need a password to run :3
 # Makes starting a new terminal much simpler and faster.
 # It runs right after sudo is added just so it's very convenient!
@@ -220,11 +224,14 @@ discord-update() { # Discord update command
 
 
 aptt() { # This is the Main update command. It updates pretty much everything. We got: APT, Flatpak, Discord, other package managers, masterrc.. list goes on and on.
-  printf -- "\n${RED}------------------------------\n"
-  printf "Authenticating...\n\n"
-  sudo -v
-  if has_cmd nerdfetch /usr/bin/nerdfetch; then
-    nerdfetch_nopasswd
+
+  if ! sudo_nopass; then
+    printf -- "\n${RED}------------------------------\n"
+    printf "Authenticating...\n\n"
+    sudo -v
+    if has_cmd nerdfetch /usr/bin/nerdfetch; then
+      nerdfetch_nopasswd
+    fi
   fi
 
 # Checking for package manager and Updating that one.
@@ -264,36 +271,36 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
   printf "Updating Masterrc...\n\n"
   bash <(curl -fsSL https://raw.githubusercontent.com/Master3307/masterrc/refs/heads/master/install.sh)
 
+  if has_cmd /usr/bin/discord discord; then
+    printf -- "\n${BLUE}------------------------------\n"
+    printf "Checking Discord...\n\n"
 
-  printf -- "\n${BLUE}------------------------------\n"
-  printf "Checking Discord...\n\n"
+    local api_url final_url remote_ver installed_ver installed_status tmp
 
-  local api_url final_url remote_ver installed_ver installed_status tmp
+    api_url='https://discord.com/api/download/stable?platform=linux&format=deb'
+    installed_status="$(dpkg-query -W -f='${Status}' discord 2>/dev/null || true)"
 
-  api_url='https://discord.com/api/download/stable?platform=linux&format=deb'
-  installed_status="$(dpkg-query -W -f='${Status}' discord 2>/dev/null || true)"
-
-  if [ "$installed_status" != "install ok installed" ]; then
-    echo "Discord is not installed. Skipping Discord update."
-  else
-    installed_ver="$(dpkg-query -W -f='${Version}' discord 2>/dev/null || true)"
-    final_url="$(command curl -fsSI -L "$api_url" | awk 'BEGIN{IGNORECASE=1} /^location:/ {print $2}' | tail -n1 | tr -d '\r')" || return 1
-    remote_ver="$(grep -oE '[0-9]+\.[0-9]+\.[0-9]+' <<< "$final_url" | head -n1)"
-
-    if [ -z "$remote_ver" ]; then
-      echo "Could not determine latest Discord version."
-      return 1
-    elif dpkg --compare-versions "$installed_ver" eq "$remote_ver"; then
-      echo "Discord is already up to date ($installed_ver)."
+    if [ "$installed_status" != "install ok installed" ]; then
+      echo "Discord is not installed. Skipping Discord update."
     else
-      echo "Installing Discord $remote_ver..."
-      tmp="$(mktemp /tmp/discord-XXXXXX.deb)" || return 1
-      wget -q --show-progress "$api_url" -O "$tmp" || { rm -f "$tmp"; return 1; }
-      sudo apt install -y "$tmp" || { rm -f "$tmp"; return 1; }
-      rm -f "$tmp"
+      installed_ver="$(dpkg-query -W -f='${Version}' discord 2>/dev/null || true)"
+      final_url="$(command curl -fsSI -L "$api_url" | awk 'BEGIN{IGNORECASE=1} /^location:/ {print $2}' | tail -n1 | tr -d '\r')" || return 1
+      remote_ver="$(grep -oE '[0-9]+\.[0-9]+\.[0-9]+' <<< "$final_url" | head -n1)"
+
+      if [ -z "$remote_ver" ]; then
+        echo "Could not determine latest Discord version."
+        return 1
+      elif dpkg --compare-versions "$installed_ver" eq "$remote_ver"; then
+        echo "Discord is already up to date ($installed_ver)."
+      else
+        echo "Installing Discord $remote_ver..."
+        tmp="$(mktemp /tmp/discord-XXXXXX.deb)" || return 1
+        wget -q --show-progress "$api_url" -O "$tmp" || { rm -f "$tmp"; return 1; }
+        sudo apt install -y "$tmp" || { rm -f "$tmp"; return 1; }
+        rm -f "$tmp"
+      fi
     fi
   fi
-
   # Finishing APT upgrades
   if has_cmd /usr/bin/apt apt; then
     printf -- "\n${GREEN}------------------------------\n"
