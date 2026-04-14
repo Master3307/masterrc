@@ -3,7 +3,7 @@
 
 You can use
 ```bash
-bash <(curl -fsSL https://masterrc.master3307.org/)
+curl -fsSL https://masterrc.master3307.org/ | bash
 ```
 to install it with one command. It only works with debian.
 
