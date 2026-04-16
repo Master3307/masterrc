@@ -377,7 +377,9 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
         printf '%s\n' "$orphans"
         sudo pacman -Rns $orphans
       else
-      echo "No pacman autoremove candidates found."
+        printf -- "\n${RED}------------------------------\n"
+        printf "Doing autoremove...\n\n"
+        echo "No pacman autoremove candidates found."
       fi
   fi
 
