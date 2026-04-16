@@ -432,7 +432,7 @@ feature() { # install additional features like fortune or nerdfetch.
       echo "              ----------------"
       echo "Installing Fortune..."
       echo
-      sudo pacman -S fortune-mod > /dev/null 2>&1 </dev/null
+      sudo pacman -S --noconfirm fortune-mod > /dev/null 2>&1 </dev/null
       echo "Fortune installed."
     fi
   fi
@@ -450,7 +450,7 @@ feature() { # install additional features like fortune or nerdfetch.
     else
       echo "              ----------------"
       echo "Installing nerdfetch..."
-      yay -S nerdfetch > /dev/null 2>&1 </dev/null
+      yay -S --noconfirm nerdfetch > /dev/null 2>&1 </dev/null
       echo
       echo "Nerdfetch installed."
       echo
