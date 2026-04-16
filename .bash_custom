@@ -79,6 +79,11 @@ INVERT='\e[7m'
 STRIKE='\e[9m'
 
 
+has_cmd() { # see if command exists or not
+  command -v "$1" >/dev/null 2>&1 || command -v "$2" >/dev/null 2>&1
+}
+
+
 # helper priority list:
 helper=""
 
@@ -144,10 +149,6 @@ nerdfetch_font_flag() { # Check for what nerdfetch compatible font is installed
 flag="$(nerdfetch_font_flag)"
 
 
-
-has_cmd() { # see if command exists or not
-  command -v "$1" >/dev/null 2>&1 || command -v "$2" >/dev/null 2>&1
-}
 
 
 
