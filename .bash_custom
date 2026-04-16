@@ -3,6 +3,7 @@
 
 # custom PS1 line:
 PS1='\[\e[1;33m\]< \[\e[0m\]\[\e[1;32m\]\u\[\e[0m\]\[\e[1;31m\]@\[\e[0m\]\[\e[1;34m\]\h\[\e[0m\]\[\e[1;33m\] > \[\e[0m\]\[\e[1;35m\]\w\[\e[0m\]\[\e[1;30m\] \$\[\e[0m\] '
+# Displays as "< master3307@MasterUSBPC > ~ $" for example
 
 # Colors
 # Reset
@@ -77,6 +78,24 @@ UNDERLINE='\e[4m'
 INVERT='\e[7m'
 STRIKE='\e[9m'
 
+
+# helper priority list:
+helper=""
+
+if has_cmd yay /usr/bin/yay; then
+  helper="yay"
+elif has_cmd paru /usr/bin/paru; then
+  helper="paru"
+elif has_cmd pikaur /usr/bin/pikaur; then
+  helper="pikaur"
+elif has_cmd /usr/bin/pacman pacman; then
+  helper="pacman"
+fi
+# If youw ant to force a helper:
+#helper=""
+
+
+
 # Typofix and other small update commands
 alias vencord='echo Starting Vencord installer... && echo Elevating with sudo... && sudo "$HOME/.local/bin/vencord"'
 alias sudp='sudo'
@@ -87,6 +106,8 @@ alias sl="ls"
 alias bye-bye="poweroff"
 alias yodel="echo"
 
+
+
 # hacker-mode
 alias btop-install="sudo apt install btop"
 alias hack="cmatrix"
@@ -94,6 +115,8 @@ alias hacking="cmatrix"
 alias hacker="cmatrix"
 alias hacker-mode="cmatrix"
 alias hacker-interface="btop"
+
+
 
 
 nerdfetch_font_flag() { # Check for what nerdfetch compatible font is installed
@@ -121,13 +144,20 @@ nerdfetch_font_flag() { # Check for what nerdfetch compatible font is installed
 flag="$(nerdfetch_font_flag)"
 
 
+
 has_cmd() { # see if command exists or not
   command -v "$1" >/dev/null 2>&1 || command -v "$2" >/dev/null 2>&1
 }
 
+
+
+
 sudo_nopass() {
     sudo -n true 2>/dev/null
 }
+
+
+
 
 # So nerdfetch doesn't need a password to run :3
 # Makes starting a new terminal much simpler and faster.
@@ -152,6 +182,8 @@ nerdfetch_nopasswd() {
   ' sh "$f" "$line" >/dev/null 2>&1
 }
 
+
+
 nerdfetch_passwd() { # enable password use for nerdfetch
   local u f
   u="$USER"
@@ -167,6 +199,8 @@ nerdfetch_passwd() { # enable password use for nerdfetch
 }
 
 
+
+
 spinner() { # hacker tool install
   local pid=$1 msg=$2
   local spin='⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏'
@@ -180,6 +214,9 @@ spinner() { # hacker tool install
   printf "\r%*s\r" $(( ${#msg} + 2 )) ""
   tput cnorm 2>/dev/null || true
 }
+
+
+
 
 
 hack-install() {
@@ -205,6 +242,9 @@ alias hacker-install="hack-install"
 alias hacking-install="hack-install"
 
 
+
+
+
 discord-install() { # Discord install command
 
   if has_cmd /usr/bin/apt apt; then
@@ -223,6 +263,10 @@ discord-install() { # Discord install command
   fi
 
 }
+
+
+
+
 
 
 discord-update() { # Discord update command
@@ -261,6 +305,10 @@ discord-update() { # Discord update command
 }
 
 
+
+
+
+
 aptt() { # This is the Main update command. It updates pretty much everything. We got: APT, Flatpak, Discord, other package managers, masterrc.. list goes on and on.
 
   if ! sudo_nopass; then
@@ -285,32 +333,16 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
     sudo apt update
   fi
 
-  if ! has_cmd yay /usr/bin/yay && ! has_cmd paru /usr/bin/paru && ! has_cmd pikaur /usr/bin/pikaur; then
-    if has_cmd /usr/bin/pacman /usr/bin/pacman; then
-      printf -- "\n${RED}------------------------------\n"
-      printf "Updating Pacman...\n\n"
+
+  if has_cmd /usr/bin/pacman pacman; then
+    printf -- "\n${WHITE}------------------------------\n"
+    printf "Updating ${helper}...\n\n"
+    if [ "$helper" = "pacman" ]; then
       sudo pacman -Syu
+    else
+      "$helper" -Syu
     fi
   fi
-
-  if has_cmd /usr/bin/yay yay; then
-    printf -- "\n${YELLOW}------------------------------\n"
-    printf "Updating Yay...\n\n"
-    yay -Syu
-  fi
-
-  if has_cmd /usr/bin/paru paru; then
-    printf -- "\n${YELLOW}------------------------------\n"
-    printf "Updating Paru...\n\n"
-    paru -Syu
-  fi
-
-  if has_cmd /usr/bin/pikaur pikaur; then
-    printf -- "\n${YELLOW}------------------------------\n"
-    printf "Updating Pikaur...\n\n"
-    pikaur -Syu
-  fi
-
 
 
   if has_cmd /usr/bin/dnf dnf; then
@@ -400,6 +432,10 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
 }
 
 
+
+
+
+
 ugit() { # quick github upload
 
   if has_cmd /usr/bin/git git; then
@@ -410,6 +446,10 @@ ugit() { # quick github upload
     git status
   fi
 }
+
+
+
+
 
 # TODO: add nerdfont install
 feature() { # install additional features like fortune or nerdfetch.
@@ -470,6 +510,10 @@ feature() { # install additional features like fortune or nerdfetch.
 }
 
 
+
+
+
+
 welcome() { # is the only visible thing at launch.  welcome message.
   printf "\n"
 
@@ -512,12 +556,16 @@ alias upgrade-all="aptt"
 
 
 
+
 #######################
 
 welcome # dear user :3
 # You are so great :D
 
 #######################
+
+
+
 
 
 
