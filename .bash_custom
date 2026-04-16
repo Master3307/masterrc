@@ -285,18 +285,33 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
     sudo apt update
   fi
 
-
-  if has_cmd /usr/bin/pacman /usr/bin/pacman; then
-    printf -- "\n${RED}------------------------------\n"
-    printf "Updating Pacman...\n\n"
-    sudo pacman -Syu
+  if ! has_cmd yay /usr/bin/yay && ! has_cmd paru /usr/bin/paru && ! has_cmd pikaur /usr/bin/pikaur; then
+    if has_cmd /usr/bin/pacman /usr/bin/pacman; then
+      printf -- "\n${RED}------------------------------\n"
+      printf "Updating Pacman...\n\n"
+      sudo pacman -Syu
+    fi
   fi
 
   if has_cmd /usr/bin/yay yay; then
     printf -- "\n${YELLOW}------------------------------\n"
     printf "Updating Yay...\n\n"
-    sudo yay -Syu
+    yay -Syu
   fi
+
+  if has_cmd /usr/bin/paru paru; then
+    printf -- "\n${YELLOW}------------------------------\n"
+    printf "Updating Paru...\n\n"
+    paru -Syu
+  fi
+
+  if has_cmd /usr/bin/pikaur pikaur; then
+    printf -- "\n${YELLOW}------------------------------\n"
+    printf "Updating Pikaur...\n\n"
+    pikaur -Syu
+  fi
+
+
 
   if has_cmd /usr/bin/dnf dnf; then
     printf -- "\n${BLUE}------------------------------\n"
@@ -341,12 +356,30 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
     sudo apt full-upgrade
   fi
 
+# Autoremove
   if has_cmd /usr/bin/apt apt; then
     printf -- "\n${RED}------------------------------\n"
     printf "Doing autoremove...\n\n"
-    sudo apt autoremove
+      sudo apt autoremove
   fi
 
+  if has_cmd /usr/bin/dnf dnf; then
+    printf -- "\n${RED}------------------------------\n"
+    printf "Doing autoremove...\n\n"
+      sudo dnf autoremove
+  fi
+
+  if has_cmd /usr/bin/pacman pacman; then
+      orphans="$(pacman -Qdtq 2>/dev/null || true)"
+      if [ -n "$orphans" ]; then
+        printf -- "\n${RED}------------------------------\n"
+        printf "Doing autoremove...\n\n"
+        printf '%s\n' "$orphans"
+        sudo pacman -Rns $orphans
+      else
+      echo "No pacman autoremove candidates found."
+      fi
+  fi
 
   printf  "\n\n${PURPLE}Updated Everything, Enjoy :D\n"
   if command -v /usr/games/fortune >/dev/null 2>&1; then
