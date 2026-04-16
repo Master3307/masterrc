@@ -123,6 +123,23 @@ alias hacker-interface="btop"
 
 
 
+fortune_any() {
+  if [ -x /usr/bin/fortune ]; then
+    /usr/bin/fortune "$@"
+  elif [ -x /usr/games/fortune ]; then
+    /usr/games/fortune "$@"
+  else
+    # fallback: if fortune is in PATH under some other layout
+    if command -v fortune >/dev/null 2>&1; then
+      fortune "$@"
+    else
+      echo "fortune: command not found" >&2
+      return 127
+    fi
+  fi
+}
+
+
 
 nerdfetch_font_flag() { # Check for what nerdfetch compatible font is installed
   # Check for any Nerd Font
@@ -515,6 +532,11 @@ feature() { # install additional features like fortune or nerdfetch.
 
 
 
+
+
+
+
+
 welcome() { # is the only visible thing at launch.  welcome message.
   printf "\n"
 
@@ -525,7 +547,7 @@ welcome() { # is the only visible thing at launch.  welcome message.
   printf "\n"
 
   if has_cmd fortune /usr/games/fortune; then
-    /usr/games/fortune -a
+    fortune_any -a
     printf "\n\n\n"
   fi
 
@@ -558,12 +580,44 @@ alias upgrade-all="aptt"
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #######################
 
 welcome # dear user :3
 # You are so great :D
 
 #######################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
