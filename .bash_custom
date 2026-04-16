@@ -180,19 +180,21 @@ alias hacking-install="hack-install"
 
 
 discord-install() { # Discord install command
-  local api_url final_url remote_ver installed_ver tmp
 
-  api_url="https://discord.com/api/download/stable?platform=linux&format=deb"
-  final_url="$(curl -fsSLI -o /dev/null -w '%{url_effective}' "$api_url")"
+  if has_cmd /usr/bin/apt apt; then
+    local api_url final_url remote_ver installed_ver tmp
 
-  printf -- "\n${BLUE}------------------------------\n"
-  printf "Installing Discord...\n\n"
+    api_url="https://discord.com/api/download/stable?platform=linux&format=deb"
+    final_url="$(curl -fsSLI -o /dev/null -w '%{url_effective}' "$api_url")"
 
-  tmp="$(mktemp /tmp/discord-XXXXXX.deb)"
-  wget -q --show-progress "$api_url" -O "$tmp"
-  sudo apt install -y "$tmp"
-  rm -f "$tmp"
+    printf -- "\n${BLUE}------------------------------\n"
+    printf "Installing Discord...\n\n"
 
+    tmp="$(mktemp /tmp/discord-XXXXXX.deb)"
+    wget -q --show-progress "$api_url" -O "$tmp"
+    sudo apt install -y "$tmp"
+    rm -f "$tmp"
+  fi
 
 }
 
@@ -203,32 +205,33 @@ discord-update() { # Discord update command
     printf -- "\n${BLUE}------------------------------\n"
     printf "Checking Discord...\n\n"
 
-    local api_url final_url remote_ver installed_ver installed_status tmp
+  if has_cmd /usr/bin/apt apt; then
+      local api_url final_url remote_ver installed_ver installed_status tmp
 
-    api_url='https://discord.com/api/download/stable?platform=linux&format=deb'
-    installed_status="$(dpkg-query -W -f='${Status}' discord 2>/dev/null || true)"
+      api_url='https://discord.com/api/download/stable?platform=linux&format=deb'
+      installed_status="$(dpkg-query -W -f='${Status}' discord 2>/dev/null || true)"
 
-    if [ "$installed_status" != "install ok installed" ]; then
-      echo "Discord is not installed. Skipping Discord update."
-    else
-      installed_ver="$(dpkg-query -W -f='${Version}' discord 2>/dev/null || true)"
-      final_url="$(command curl -fsSI -L "$api_url" | awk 'BEGIN{IGNORECASE=1} /^location:/ {print $2}' | tail -n1 | tr -d '\r')" || return 1
-      remote_ver="$(grep -oE '[0-9]+\.[0-9]+\.[0-9]+' <<< "$final_url" | head -n1)"
-
-      if [ -z "$remote_ver" ]; then
-        echo "Could not determine latest Discord version."
-        return 1
-      elif dpkg --compare-versions "$installed_ver" eq "$remote_ver"; then
-        echo "Discord is already up to date ($installed_ver)."
+      if [ "$installed_status" != "install ok installed" ]; then
+        echo "Discord is not installed. Skipping Discord update."
       else
-        echo "Installing Discord $remote_ver..."
-        tmp="$(mktemp /tmp/discord-XXXXXX.deb)" || return 1
-        wget -q --show-progress "$api_url" -O "$tmp" || { rm -f "$tmp"; return 1; }
-        sudo apt install -y "$tmp" || { rm -f "$tmp"; return 1; }
-        rm -f "$tmp"
+        installed_ver="$(dpkg-query -W -f='${Version}' discord 2>/dev/null || true)"
+        final_url="$(command curl -fsSI -L "$api_url" | awk 'BEGIN{IGNORECASE=1} /^location:/ {print $2}' | tail -n1 | tr -d '\r')" || return 1
+        remote_ver="$(grep -oE '[0-9]+\.[0-9]+\.[0-9]+' <<< "$final_url" | head -n1)"
+
+        if [ -z "$remote_ver" ]; then
+          echo "Could not determine latest Discord version."
+          return 1
+        elif dpkg --compare-versions "$installed_ver" eq "$remote_ver"; then
+          echo "Discord is already up to date ($installed_ver)."
+        else
+          echo "Installing Discord $remote_ver..."
+          tmp="$(mktemp /tmp/discord-XXXXXX.deb)" || return 1
+          wget -q --show-progress "$api_url" -O "$tmp" || { rm -f "$tmp"; return 1; }
+          sudo apt install -y "$tmp" || { rm -f "$tmp"; return 1; }
+          rm -f "$tmp"
+        fi
       fi
     fi
-
 }
 
 
@@ -324,42 +327,47 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
 
 ugit() { # quick github upload
 
-  git add .
-  git commit
-  git push
+  if has_cmd /usr/bin/git git; then
+    git add .
+    git commit
+    git push
 
-  git status
-
+    git status
+  fi
 }
 
 # TODO: add nerdfont install
 feature() { # install additional features like fortune or nerdfetch.
-  # Install fortune if missing
-  if ! has_cmd fortune /usr/games/fortune; then
-    echo "              ----------------"
-    echo "Installing Fortune..."
-    echo
-    sudo apt install -y fortune-mod > /dev/null 2>&1 </dev/null
-    echo "Fortune installed."
+
+  if has_cmd /usr/bin/apt apt; then
+    # Install fortune if missing
+    if ! has_cmd fortune /usr/games/fortune; then
+      echo "              ----------------"
+      echo "Installing Fortune..."
+      echo
+      sudo apt install -y fortune-mod > /dev/null 2>&1 </dev/null
+      echo "Fortune installed."
+    fi
+
+    # Install nerdfetch if missing
+    if ! has_cmd nerdfetch /usr/bin/nerdfetch; then
+      echo "              ----------------"
+      echo "Installing nerdfetch..."
+      sudo curl -fsSL "https://raw.githubusercontent.com/ThatOneCalculator/NerdFetch/main/nerdfetch" \
+        -o /usr/bin/nerdfetch > /dev/null 2>&1 </dev/null
+      sudo chmod u+x /usr/bin/nerdfetch > /dev/null 2>&1 </dev/null
+      echo
+      echo "Nerdfetch installed."
+      echo
+      printf "\nNow run ${PURPLE}welcome${R} to see what changed :3"
+    fi
+
+    # Both present = info message
+    if has_cmd fortune /usr/games/fortune && has_cmd nerdfetch /usr/bin/nerdfetch; then
+      printf "\nFeatures already installed, run ${PURPLE}welcome${R} to see what it is :3\n\n"
+    fi
   fi
 
-  # Install nerdfetch if missing
-  if ! has_cmd nerdfetch /usr/bin/nerdfetch; then
-    echo "              ----------------"
-    echo "Installing nerdfetch..."
-    sudo curl -fsSL "https://raw.githubusercontent.com/ThatOneCalculator/NerdFetch/main/nerdfetch" \
-      -o /usr/bin/nerdfetch > /dev/null 2>&1 </dev/null
-    sudo chmod u+x /usr/bin/nerdfetch > /dev/null 2>&1 </dev/null
-    echo
-    echo "Nerdfetch installed."
-    echo
-    printf "\nNow run ${PURPLE}welcome${R} to see what changed :3"
-  fi
-
-  # Both present = info message
-  if has_cmd fortune /usr/games/fortune && has_cmd nerdfetch /usr/bin/nerdfetch; then
-    printf "\nFeatures already installed, run ${PURPLE}welcome${R} to see what it is :3\n\n"
-  fi
 }
 
 
