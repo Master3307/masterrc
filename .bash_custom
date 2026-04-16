@@ -95,7 +95,33 @@ alias hacker="cmatrix"
 alias hacker-mode="cmatrix"
 alias hacker-interface="btop"
 
-has_cmd() {
+
+nerdfetch_font_flag() { # Check for what nerdfetch compatible font is installed
+  # Check for any Nerd Font
+  if fc-list | grep -qi "nerd"; then
+    # Nerd Font found → output nothing (success, empty)
+    return 0
+  fi
+
+  # Check for Cozette
+  if fc-list | grep -qi "cozette"; then
+    echo "-c"
+    return 0
+  fi
+
+  # Check for Phosphor
+  if fc-list | grep -qi "phosphor"; then
+    echo "-p"
+    return 0
+  fi
+
+  # None found
+  echo "-e"
+}
+flag="$(nerdfetch_font_flag)"
+
+
+has_cmd() { # see if command exists or not
   command -v "$1" >/dev/null 2>&1 || command -v "$2" >/dev/null 2>&1
 }
 
@@ -266,10 +292,24 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
     sudo pacman -Syu
   fi
 
+  if has_cmd /usr/bin/yay yay; then
+    printf -- "\n${YELLOW}------------------------------\n"
+    printf "Updating Yay...\n\n"
+    sudo yay -Syu
+  fi
+
   if has_cmd /usr/bin/dnf dnf; then
     printf -- "\n${BLUE}------------------------------\n"
     printf "Updating Dnf...\n\n"
     sudo dnf upgrade --refresh
+  fi
+
+
+  if has_cmd /usr/bin/zypper zypper; then
+    printf -- "\n${GREEN}------------------------------\n"
+    printf "Updating Zypper...\n\n"
+    sudo zypper refresh
+    sudo zypper update
   fi
 
   if has_cmd /usr/bin/snap snap; then
@@ -339,6 +379,7 @@ ugit() { # quick github upload
 # TODO: add nerdfont install
 feature() { # install additional features like fortune or nerdfetch.
 
+# Apt
   if has_cmd /usr/bin/apt apt; then
     # Install fortune if missing
     if ! has_cmd fortune /usr/games/fortune; then
@@ -348,25 +389,48 @@ feature() { # install additional features like fortune or nerdfetch.
       sudo apt install -y fortune-mod > /dev/null 2>&1 </dev/null
       echo "Fortune installed."
     fi
+  fi
 
-    # Install nerdfetch if missing
-    if ! has_cmd nerdfetch /usr/bin/nerdfetch; then
+# Pacman
+
+  if has_cmd /usr/bin/pacman pacman; then
+    # Install fortune if missing
+    if ! has_cmd fortune /usr/games/fortune; then
+      echo "              ----------------"
+      echo "Installing Fortune..."
+      echo
+      sudo pacman -S fortune-mod > /dev/null 2>&1 </dev/null
+      echo "Fortune installed."
+    fi
+  fi
+
+  # install nerdfetch if missing
+  if ! has_cmd nerdfetch /usr/bin/nerdfetch; then
+    if ! has_cmd yay /usr/bin/yay; then
       echo "              ----------------"
       echo "Installing nerdfetch..."
-      sudo curl -fsSL "https://raw.githubusercontent.com/ThatOneCalculator/NerdFetch/main/nerdfetch" \
-        -o /usr/bin/nerdfetch > /dev/null 2>&1 </dev/null
+      sudo curl -fsSL "https://raw.githubusercontent.com/ThatOneCalculator/NerdFetch/main/nerdfetch" -o /usr/bin/nerdfetch > /dev/null 2>&1 </dev/null
       sudo chmod u+x /usr/bin/nerdfetch > /dev/null 2>&1 </dev/null
       echo
       echo "Nerdfetch installed."
       echo
-      printf "\nNow run ${PURPLE}welcome${R} to see what changed :3"
-    fi
+    else
+      echo "              ----------------"
+      echo "Installing nerdfetch..."
+      yay -S nerdfetch > /dev/null 2>&1 </dev/null
+      echo
+      echo "Nerdfetch installed."
+      echo
 
-    # Both present = info message
-    if has_cmd fortune /usr/games/fortune && has_cmd nerdfetch /usr/bin/nerdfetch; then
-      printf "\nFeatures already installed, run ${PURPLE}welcome${R} to see what it is :3\n\n"
     fi
+    printf "\nNow run ${PURPLE}welcome${R} to see what changed :3"
   fi
+
+  # Both present = info message
+  if has_cmd fortune /usr/games/fortune && has_cmd nerdfetch /usr/bin/nerdfetch; then
+    printf "\nFeatures already installed, run ${PURPLE}welcome${R} to see what it is :3\n\n"
+  fi
+
 
 }
 
@@ -375,7 +439,7 @@ welcome() { # is the only visible thing at launch.  welcome message.
   printf "\n"
 
   if has_cmd nerdfetch /usr/bin/nerdfetch; then
-    sudo /usr/bin/nerdfetch
+    sudo /usr/bin/nerdfetch $flag            # change this if you need. if you use nerdfont, remove the flag. if you use cozette, use -c. and if you use phosphor, use -p. if you use none of this, use -e. (usually automatic)
   fi
 
   printf "\n"
@@ -406,8 +470,20 @@ welcome() { # is the only visible thing at launch.  welcome message.
 alias welcum="clear && welcome"
 alias updates="aptt"
 alias upgrades="aptt"
+alias update-all="aptt"
+alias upgrade-all="aptt"
+
+
+
+
+
+#######################
 
 welcome # dear user :3
 # You are so great :D
+
+#######################
+
+
 
 
