@@ -1,5 +1,9 @@
+---
+search:
+    exclude: true
+---
 
-# [![Logo](./docs/media/MasterRC_LogoLarge.png "MasterRC Logo")](https://masterrc-docs.master3307.org/)
+# <img src="https://github.com/Master3307/masterrc/blob/master/docs/media/MasterRC_LogoLarge.png?raw=true" alt="MasterRC Logo" width="700px">
 
 ## Install
 
@@ -27,14 +31,14 @@ Commands:
 | `welcum`             | clears and displays the welcome message again (sorry for the name)   |
 | `nerdfetch_nopasswd` | when nerdfetch is installed, it removes the need for a sudo password |
 | `nerdfetch_passwd`   | when nerdfetch is installed, it adds the need for a sudo password    |
-| `hack-install`       | installs cmatrix and btop. look in [.bash_custom](./.bash_custom)    |
+| `hack-install`       | installs cmatrix and btop. look in [.bash_custom](https://github.com/Master3307/masterrc/blob/master/.bash_custom)    |
 
 I just wanted a quick and easy way to Update all my Stuff and it's just very convenient if it's Public.
 Also if you want it, you can use it yourself.
 
 All it does is Update stuff nicely and set my custom stuff in the bash source.
 
-![Preview](./docs/media/preview.png "looks cool, right?")
+<img src="https://github.com/Master3307/masterrc/blob/master/docs/media/preview.png?raw=true" alt="looks cool, right?" width="700px">
 
 as you see it basically does following:
 
@@ -102,8 +106,8 @@ welcome # dear user :3
 
 </details>
 
-that was merely a snippet of how the [Preview](./preview.png) is made.
+that was merely a snippet of how the [Preview](media/preview.png) is made.
 
-You can look at [this](./.bash_custom) to see what it is actually made of.
+You can look at [this](https://github.com/Master3307/masterrc/blob/master/.bash_custom) to see what it is actually made of.
 
 the file was made with a little [AI](https://perplexity.com) and [myself](https://github.com/master3307) who is actually learning how to do *bash* with this very project XD 

@@ -1,5 +1,10 @@
 site_name: .RC Documentation
 site_url: https://masterrc-docs.master3307.org
+repo_name: Master3307/masterrc
+repo_url: https://github.com/Master3307/masterrc
+
+not_in_nav: |
+    README_old.md
 
 theme:
   name: material
@@ -11,12 +16,21 @@ theme:
     - navigation.top
     - navigation.tracking
     - navigation.path
+    - navigation.header
+    - navigation.footer
 
     - search.suggest
     - search.highlight
     - search.share
 
     - toc.follow
+
+    - content.code.annotate
+    - content.code.copy
+    - content.code.focus
+    - content.code.line_numbers
+    - content.action.edit
+    - content.action.view
   palette:
     - scheme: slate
       primary: deep purple
@@ -39,16 +53,40 @@ plugins:
 nav:
   - Getting Started:
     - Welcome: index.md
-    - Install: install.md
+    - Installation: install.md
     - Usage: usage.md
 
   - Guide:
      - Customize: customize.md
 
   - About:
-    - Changelog: changelog.md
+    - News: changelog.md
+    - Idea: idea.md
 
 extra:
   analytics:
     provider: google
     property: G-15FGFZVZM5
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      use_pygments: true
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - attr_list
+  - tables
+  - footnotes
+  - toc:
+      permalink: true
