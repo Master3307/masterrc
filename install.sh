@@ -114,9 +114,30 @@ fi
 
 echo "              ----------------"
 printf "${R}Done, Installed/Updated masterrc.\n"
-echo
-echo "... and have fun with whatever you just installed :3"
-echo 'Feel free to try "aptt" in a Terminal. It updates everything.'
-printf "\nAlso.. you can run \"${RED}feature${R}\" to install additional features"'!'"\n\nReload your shell with: ${RED}source ~/.bashrc${R}\n\n"
+printf "... and have fun with whatever you just installed :3\n\n"
+printf "Feel free to try \"${RED}aptt${R}\" in a Terminal. It updates everything.\n"
+printf "Also.. you can run \"${RED}feature${R}\" to install additional features and "'!'"\n\nReload your shell with: ${RED}source ~/.bashrc${R}\n\n"
 
-source ~/.bashrc
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
