@@ -1,4 +1,5 @@
-# [![Logo](./docs/media/MasterRC_LogoLarge.png "MasterRC Logo"){width=50%}](https://masterrc-docs.master3307.org/)
+# <a href="https://masterrc-docs.master3307.org/">
+  <img src="./docs/media/MasterRC_LogoLarge.png" alt="MasterRC Logo" width="50%"></a>
 
 ## Quick Install
 
