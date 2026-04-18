@@ -1,10 +1,28 @@
-site_name: MasterRC Docs
+site_name: MasterRC Documentation
 site_url: https://masterrc-docs.master3307.org
 
 theme:
   name: material
+  favicon: media/MasterRC_Logo.png
+  logo: media/MasterRC_LogoLarge.png
+  palette:
+    - scheme: slate
+      primary: deep purple
+      accent: deep purple
+      toggle:
+        icon: material/brightness-7
+        name: Switch to light mode
+
+    - scheme: default
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to dark mode
+
+plugins:
+    - optimize
 
 nav:
-  - Initial: index.md
-  - Welcome: welcome.md
-  - Install: install.md
+    - Welcome: index.md
+    - Install: install.md
