@@ -433,6 +433,13 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
       fi
   fi
 
+  if has_cmd /usr/bin/update update; then
+    printf -- "\n${YELLOW}------------------------------\n"
+    printf "Trying Update command...\n\n"
+      sudo update
+  fi
+
+
   printf  "\n\n${PURPLE}Updated Everything, Enjoy :D\n"
   if command -v /usr/games/fortune >/dev/null 2>&1; then
     printf "Have a fortune :3\n\n${R}"
