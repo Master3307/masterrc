@@ -113,9 +113,10 @@ else
 fi
 
 echo "              ----------------"
-printf "${R}Done, Installed/Updated masterrc. Reload your shell with: source ~/.bashrc\n"
+printf "${R}Done, Installed/Updated masterrc.\n"
 echo
 echo "... and have fun with whatever you just installed :3"
 echo 'Feel free to try "aptt" in a Terminal. It updates everything.'
-printf "\nAlso.. you can run \"${RED}feature${R}\" to install additional features"'!'"\n\n"
+printf "\nAlso.. you can run \"${RED}feature${R}\" to install additional features"'!'"\n\nReload your shell with: ${RED}source ~/.bashrc${R}\n\n"
 
+source ~/.bashrc
