@@ -2,4 +2,7 @@
 icon: material/brush
 ---
 
-# Coming soon...
+# Customize
+
+!!! info "Info"
+    Coming soon...
