@@ -1,5 +1,7 @@
 
-# Please god review this code before you install it. Don't blame me for any damage!
+# ![Logo](./docs/media/MasterRC_LogoLarge.png "MasterRC Logo")
+
+## Install
 
 You can use
 
@@ -8,6 +10,9 @@ curl -fsSL https://masterrc.master3307.org/ | bash
 ```
 
 to install it with one command. It only works with debian.
+
+> Please god review this code before you install it. Don't blame me for any damage!
+---
 
 You can **update** either by running `bash <(curl -fsSL https://masterrc.master3307.org/)` again or by running `masterrc` after running the install script once.
 
