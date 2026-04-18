@@ -4,6 +4,19 @@ icon: material/newspaper
 
 # News
 
+## 003 - Tired
+
+---
+I am pretty tired as I am writing this. I finally filled the [Usage](usage.md) page. I still have to add the [Customize](customize.md) page. There aren't even any cutomization options yet XDD
+
+Will have to add them I guess..
+
+also I want to add more settings commands. I think that might be nice.
+
+and more commands in general. we can make this big! ahahahahaahaa
+
+*good night!*
+
 ## 002 - README
 
 ---
@@ -14,6 +27,7 @@ wanna see the old one?
 [here it is!](README_old.md)
 
 Truly a relic.
+
 ## 001 - Changelog added
 
 ---
