@@ -143,21 +143,24 @@ fortune_any() {
 
 nerdfetch_font_flag() { # Check for what nerdfetch compatible font is installed
   # Check for any Nerd Font
-  if fc-list | grep -qi "nerd"; then
-    # Nerd Font found → output nothing (success, empty)
-    return 0
-  fi
 
-  # Check for Cozette
-  if fc-list | grep -qi "cozette"; then
-    echo "-c"
-    return 0
-  fi
+  if has_cmd fc-list /usr/bin/fc-list; then
+    if fc-list | grep -qi "nerd"; then
+      # Nerd Font found → output nothing (success, empty)
+      return 0
+    fi
 
-  # Check for Phosphor
-  if fc-list | grep -qi "phosphor"; then
-    echo "-p"
-    return 0
+    # Check for Cozette
+    if fc-list | grep -qi "cozette"; then
+      echo "-c"
+      return 0
+    fi
+
+    # Check for Phosphor
+    if fc-list | grep -qi "phosphor"; then
+      echo "-p"
+      return 0
+    fi
   fi
 
   # None found
