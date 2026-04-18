@@ -1,0 +1,9 @@
+site_name: MasterRC Docs
+site_url: https://masterrc-docs.master3307.org
+
+theme:
+  name: material
+
+nav:
+  - Welcome: welcome.md
+  - Install: install.md
