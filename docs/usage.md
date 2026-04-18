@@ -36,3 +36,5 @@ icon: material/console
 | --------- | ------------- |
 | `welcome` | displays the welcome message again |
 | `fortune_any` | displays a random fortune message depending on the available fortune command |
+
+<!-- TODO: Add more command here and add feedback thing for people to give commands -->
