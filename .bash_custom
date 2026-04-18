@@ -105,7 +105,6 @@ fi
 alias vencord='echo Starting Vencord installer... && echo Elevating with sudo... && sudo "$HOME/.local/bin/vencord"'
 alias sudp='sudo'
 alias masterrc="curl -fsSL https://masterrc.master3307.org/ | bash"
-alias profilerc="bash '$HOME/.masterrc/profile.sh'"
 alias la="ls -a"
 alias sl="ls"
 alias bye-bye="poweroff"
@@ -292,11 +291,11 @@ discord-install() { # Discord install command
 
 discord-update() { # Discord update command
 
+   if has_cmd /usr/bin/apt apt; then
+      printf -- "\n${BLUE}------------------------------\n"
+      printf "Checking Discord...\n\n"
 
-    printf -- "\n${BLUE}------------------------------\n"
-    printf "Checking Discord...\n\n"
 
-  if has_cmd /usr/bin/apt apt; then
       local api_url final_url remote_ver installed_ver installed_status tmp
 
       api_url='https://discord.com/api/download/stable?platform=linux&format=deb'
@@ -471,6 +470,7 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
 ugit() { # quick github upload
 
   if has_cmd /usr/bin/git git; then
+    git pull
     git add .
     git commit
     git push

@@ -2,11 +2,11 @@
 
 ## Description
 
-MasterRC is a simple bash script that updates pretty much everything on your system with one command.
+MasterRC is a simple bash script that mainly updates pretty much everything on your system with one command.
 
 It updates APT, pacman, Flatpak, Snap and Discord among other things. 
 
-Also it updates itself and it has some other commands. Find them **[here](https://masterrc-docs.master3307.org/usage)**.
+Also it updates itself and it has a lot of other commands. Find them **[here](https://masterrc-docs.master3307.org/usage)**.
 
 ## Quick Install
 

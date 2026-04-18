@@ -27,7 +27,10 @@ Check the **[Usage](usage.md)** page for more information on the commands.
 ## Uninstall
 
 ---
-Use
+
+Run `masterrc-uninstall` in a Terminal Window to uninstall.
+
+optionally you can use
 
 ```bash
 curl -fsSL https://u-masterrc.master3307.org/ | bash
