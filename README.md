@@ -1,5 +1,5 @@
 
-# ![Logo](./docs/media/MasterRC_LogoLarge.png "MasterRC Logo")
+# [![Logo](./docs/media/MasterRC_LogoLarge.png "MasterRC Logo")](https://masterrc-docs.master3307.org/)
 
 ## Install
 
