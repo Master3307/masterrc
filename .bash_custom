@@ -87,7 +87,9 @@ has_cmd() { # see if command exists or not
 # helper priority list:
 helper=""
 
-if has_cmd yay /usr/bin/yay; then
+if has_cmd cachy-update /usr/bin/cachy-update; then
+  helper="cachy"
+elif has_cmd yay /usr/bin/yay; then
   helper="yay"
 elif has_cmd paru /usr/bin/paru; then
   helper="paru"
@@ -394,6 +396,8 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
     printf "Updating ${helper}...\n\n"
     if [ "$helper" = "pacman" ]; then
       $sudo pacman -Syu
+    elif [ "$helper" = "cachy" ]; then
+      cachy-update
     else
       "$helper" -Syu
     fi
@@ -473,10 +477,10 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
     printf "Have a fortune :3\n\n${R}"
     if ! command -v /usr/games/cowsay >/dev/null 2>&1; then
       printf '"\n'
-      /usr/games/fortune -a
+      fortune_any
       printf '"\n'
     else
-      /usr/games/fortune -a | /usr/games/cowsay -f sheep
+      fortune_any| /usr/games/cowsay -f sheep
     fi
   fi
   printf "\n\n"
