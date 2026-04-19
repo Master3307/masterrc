@@ -4,7 +4,74 @@ icon: material/newspaper
 
 # News
 
-## 003 - Tired
+!!! info "Info"
+        This page is more of a journal to what I am working on and updating.
+        Feel free to check here sometimes.
+
+## Updates
+
+---
+### 004 - Idea
+
+---
+So.. I just woke up after some horrible sleep.. and I think I have an Idea of how to add the customize feature.
+
+What if I make the apt command more modular? that the commands *inside* the aptt command for example are seperate and just have to be put in the aptt command via some kind of list or something..
+people could easily add their own update commands..
+
+also I want to make some kind of overwrite system maybe. I think that might be nice.
+
+of course I will have to see first how I will do this..
+
+idea for the modular aptt command:
+
+```bash
+update-command1() {
+    echo "-------------"
+    echo "updating command1"
+}
+
+update-command() {
+    echo "-------------"
+    echo "updating command"
+}
+
+aptt() {
+
+    # updates command 1
+    update-command1
+    
+    # updates command 
+    update-command
+    
+}
+
+    ## or:
+
+update-command() {
+    echo "-------------"
+    ec
+    
+aptt-list() {
+    # some code that reads a global file of available update commands. commands that run in a specific oder with the aptt command.
+    # maybe add a new source file with it.
+    
+}
+
+aptt() {
+
+    # function that runns all of the commands that aptt-list gets.
+    # we'll see how I do that.
+    aptt-list
+    
+    # fixed command, if I need it somehow. I think I won't
+    fixed-command
+
+}
+
+```
+
+### 003 - Tired
 
 ---
 I am pretty tired as I am writing this. I finally filled the [Usage](usage.md) page. I still have to add the [Customize](customize.md) page. There aren't even any cutomization options yet XDD
@@ -17,7 +84,7 @@ and more commands in general. we can make this big! ahahahahaahaa
 
 *good night!*
 
-## 002 - README
+### 002 - README
 
 ---
 lol, I just made the README much smaller and simpler.
@@ -28,7 +95,7 @@ wanna see the old one?
 
 Truly a relic.
 
-## 001 - Changelog added
+### 001 - Changelog added
 
 ---
 So, I just added the changelog. This will be more me just taking about what I am working on right here. Kind of like news, so I named it "News". 
