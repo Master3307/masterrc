@@ -573,7 +573,7 @@ welcome() { # is the only visible thing at launch.  welcome message.
   printf "\n"
 
   if has_cmd fortune /usr/games/fortune; then
-    fortune_any -a
+    fortune_any # had to remove -a flag. if you want offensive ones included, customize it.
     printf "\n\n\n"
   fi
 
