@@ -15,3 +15,11 @@ env/
 # IDE/editor
 .vscode/
 .idea/
+
+
+# Obsidian
+*.obsidian/
+
+# Secret
+secret.md
+# nothing to see here
