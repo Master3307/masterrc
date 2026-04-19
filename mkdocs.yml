@@ -8,6 +8,7 @@ not_in_nav: |
 
 theme:
   name: material
+  custom_dir: overrides
   favicon: media/MasterRC_Logo.png
   logo: media/MasterRC_LogoLarge.png
   features:
@@ -49,6 +50,12 @@ theme:
 plugins:
   - search
   - optimize
+  - git-revision-date-localized:
+      type: timeago
+      locale: en
+      fallback_to_build_date: false
+
+  - mkdocs-video
 
 nav:
   - Getting Started:

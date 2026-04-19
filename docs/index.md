@@ -14,6 +14,7 @@ This is a full documentation on how to **[install](install.md)** and **[use](usa
 ---
 
 Do you want your bash Terminal to look like this?
+
 ![Preview](media/preview.png "looks cool, right?")
 
 Well it can with MasterRC! And you can even **[customize](customize.md)** it to your liking!
