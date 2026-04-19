@@ -131,6 +131,15 @@ else
 fi
 
 
+if [ -n "${TERMUX_VERSION:-}" ] || [[ "${PREFIX:-}" == *com.termux* ]]; then
+    nerdfetch_target="${PREFIX:-/data/data/com.termux/files/usr}/bin/nerdfetch"
+    nerdfetch_chmod="a+x"
+    nerdfetch_bin="${PREFIX:-/data/data/com.termux/files/usr}/bin/nerdfetch"
+else
+    nerdfetch_target="/usr/bin/nerdfetch"
+    nerdfetch_chmod="u+x"
+    nerdfetch_bin="/usr/bin/nerdfetch"
+fi
 
 
 
@@ -528,14 +537,6 @@ feature() { # install additional features like fortune or nerdfetch.
     if ! has_cmd yay /usr/bin/yay; then
       echo "              ----------------"
       echo "Installing nerdfetch..."
-      if [ -n "${TERMUX_VERSION:-}" ] || [[ "${PREFIX:-}" == *com.termux* ]]; then
-          nerdfetch_target="$PREFIX/bin/nerdfetch"
-          nerdfetch_chmod="a+x"
-      else
-          nerdfetch_target="/usr/bin/nerdfetch"
-          nerdfetch_chmod="u+x"
-      fi
-
       $sudo curl -fsSL "https://raw.githubusercontent.com/ThatOneCalculator/NerdFetch/main/nerdfetch" -o "$nerdfetch_target" > /dev/null 2>&1 </dev/null
       $sudo chmod "$nerdfetch_chmod" "$nerdfetch_target" > /dev/null 2>&1 </dev/null
       echo
@@ -574,8 +575,8 @@ feature() { # install additional features like fortune or nerdfetch.
 welcome() { # is the only visible thing at launch.  welcome message.
   printf "\n"
 
-  if has_cmd nerdfetch /usr/bin/nerdfetch; then
-    $sudo /usr/bin/nerdfetch $flag            # change this if you need. if you use nerdfont, remove the flag. if you use cozette, use -c. and if you use phosphor, use -p. if you use none of this, use -e. (usually automatic)
+  if has_cmd nerdfetch "$nerdfetch_bin"; then
+    $sudo "$nerdfetch_bin" "$flag"           # change this if you need. if you use nerdfont, remove the flag. if you use cozette, use -c. and if you use phosphor, use -p. if you use none of this, use -e. (usually automatic)
   fi
 
   printf "\n"
