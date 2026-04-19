@@ -11,6 +11,15 @@ icon: material/newspaper
 ## Updates
 
 ---
+### 005 - Big Changes
+
+---
+some big changes will be coming soon. I am learning how to add a .sh file into the /usr/bin/ directory myself and commands will change a lot!
+
+[customization](customize.md) will also be possible soon then!
+
+I hope this works nicely when I do it.
+
 ### 004 - Idea
 
 ---
