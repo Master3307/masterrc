@@ -122,6 +122,18 @@ alias hacker-interface="btop"
 
 
 
+
+# check if user is root or if they are in termux. now I can replace every sudo command with $sudo, yayy :D
+if [ "$(id -u)" -eq 0 ] || [ -n "${TERMUX_VERSION:-}" ] || [[ "${PREFIX:-}" == *com.termux* ]]; then
+    sudo=""
+else
+    sudo="sudo"
+fi
+
+
+
+
+
 fortune_any() {
   if [ -x /usr/bin/fortune ]; then
     /usr/bin/fortune "$@"
@@ -173,7 +185,7 @@ flag="$(nerdfetch_font_flag)"
 
 
 sudo_nopass() {
-    sudo -n true 2>/dev/null
+    $sudo -n true 2>/dev/null
 }
 
 
@@ -189,7 +201,7 @@ nerdfetch_nopasswd() {
   f="/etc/sudoers.d/nerdfetch-$u"
   line="$u ALL=(root) NOPASSWD: /usr/bin/nerdfetch"
 
-  sudo sh -c '
+  $sudo sh -c '
     f="$1"
     line="$2"
 
@@ -209,7 +221,7 @@ nerdfetch_passwd() { # enable password use for nerdfetch
   u="$USER"
   f="/etc/sudoers.d/nerdfetch-$u"
 
-  sudo sh -c '
+  $sudo sh -c '
     f="$1"
     if [ -f "$f" ]; then
       rm -f "$f"
@@ -242,7 +254,7 @@ spinner() { # hacker tool install
 hack-install() {
   set +m   # disable job control messages
   echo Verify...
-  sudo -v
+  $sudo -v
   sudo apt install cmatrix btop -y > /dev/null 2>&1 </dev/null
   echo
   ( sleep 10 ) &
@@ -278,7 +290,7 @@ discord-install() { # Discord install command
 
     tmp="$(mktemp /tmp/discord-XXXXXX.deb)"
     wget -q --show-progress "$api_url" -O "$tmp"
-    sudo apt install -y "$tmp"
+    $sudo apt install -y "$tmp"
     rm -f "$tmp"
   fi
 
@@ -317,7 +329,7 @@ discord-update() { # Discord update command
           echo "Installing Discord $remote_ver..."
           tmp="$(mktemp /tmp/discord-XXXXXX.deb)" || return 1
           wget -q --show-progress "$api_url" -O "$tmp" || { rm -f "$tmp"; return 1; }
-          sudo apt install -y "$tmp" || { rm -f "$tmp"; return 1; }
+          $sudo apt install -y "$tmp" || { rm -f "$tmp"; return 1; }
           rm -f "$tmp"
         fi
       fi
@@ -334,14 +346,14 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
   if has_cmd /usr/bin/update update; then
     printf -- "\n${YELLOW}------------------------------\n"
     printf "Trying Update command...\n\n"
-      sudo update
+      $sudo update
   fi
 
 
   if ! sudo_nopass; then
     printf -- "\n${RED}------------------------------\n"
     printf "Authenticating...\n\n"
-    sudo -v
+    $sudo -v
     if has_cmd nerdfetch /usr/bin/nerdfetch; then
       nerdfetch_nopasswd
     fi
@@ -364,7 +376,7 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
   if has_cmd /usr/bin/apt apt; then
     printf -- "\n${WHITE}------------------------------\n"
     printf "Updating APT...\n\n"
-    sudo apt update
+    $sudo apt update
   fi
 
 
@@ -372,7 +384,7 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
     printf -- "\n${WHITE}------------------------------\n"
     printf "Updating ${helper}...\n\n"
     if [ "$helper" = "pacman" ]; then
-      sudo pacman -Syu
+      $sudo pacman -Syu
     else
       "$helper" -Syu
     fi
@@ -382,21 +394,21 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
   if has_cmd /usr/bin/dnf dnf; then
     printf -- "\n${BLUE}------------------------------\n"
     printf "Updating Dnf...\n\n"
-    sudo dnf upgrade --refresh
+    $sudo dnf upgrade --refresh
   fi
 
 
   if has_cmd /usr/bin/zypper zypper; then
     printf -- "\n${GREEN}------------------------------\n"
     printf "Updating Zypper...\n\n"
-    sudo zypper refresh
-    sudo zypper update
+    $sudo zypper refresh
+    $sudo zypper update
   fi
 
   if has_cmd /usr/bin/snap snap; then
     printf -- "\n${CYAN}------------------------------\n"
     printf "Refreshing Snap...\n\n"
-    sudo snap refresh
+    $sudo snap refresh
   fi
 
 
@@ -409,26 +421,26 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
   if has_cmd /usr/bin/apt apt; then
     printf -- "\n${GREEN}------------------------------\n"
     printf "Doing upgrade...\n\n"
-    sudo apt upgrade
+    $sudo apt upgrade
   fi
 
   if has_cmd /usr/bin/apt apt; then
     printf -- "\n${B_GREEN}------------------------------\n"
     printf "Doing full-upgrade...\n\n"
-    sudo apt full-upgrade
+    $sudo apt full-upgrade
   fi
 
 # Autoremove
   if has_cmd /usr/bin/apt apt; then
     printf -- "\n${RED}------------------------------\n"
     printf "Doing autoremove...\n\n"
-      sudo apt autoremove
+      $sudo apt autoremove
   fi
 
   if has_cmd /usr/bin/dnf dnf; then
     printf -- "\n${RED}------------------------------\n"
     printf "Doing autoremove...\n\n"
-      sudo dnf autoremove
+      $sudo dnf autoremove
   fi
 
   if has_cmd /usr/bin/pacman pacman; then
@@ -437,7 +449,7 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
         printf -- "\n${RED}------------------------------\n"
         printf "Doing autoremove...\n\n"
         printf '%s\n' "$orphans"
-        sudo pacman -Rns $orphans
+        $sudo pacman -Rns $orphans
       else
         printf -- "\n${RED}------------------------------\n"
         printf "Doing autoremove...\n\n"
@@ -493,7 +505,7 @@ feature() { # install additional features like fortune or nerdfetch.
       echo "              ----------------"
       echo "Installing Fortune..."
       echo
-      sudo apt install -y fortune-mod > /dev/null 2>&1 </dev/null
+      $sudo apt install -y fortune-mod > /dev/null 2>&1 </dev/null
       echo "Fortune installed."
     fi
   fi
@@ -506,7 +518,7 @@ feature() { # install additional features like fortune or nerdfetch.
       echo "              ----------------"
       echo "Installing Fortune..."
       echo
-      sudo pacman -S --noconfirm fortune-mod > /dev/null 2>&1 </dev/null
+      $sudo pacman -S --noconfirm fortune-mod > /dev/null 2>&1 </dev/null
       echo "Fortune installed."
     fi
   fi
@@ -516,8 +528,8 @@ feature() { # install additional features like fortune or nerdfetch.
     if ! has_cmd yay /usr/bin/yay; then
       echo "              ----------------"
       echo "Installing nerdfetch..."
-      sudo curl -fsSL "https://raw.githubusercontent.com/ThatOneCalculator/NerdFetch/main/nerdfetch" -o /usr/bin/nerdfetch > /dev/null 2>&1 </dev/null
-      sudo chmod u+x /usr/bin/nerdfetch > /dev/null 2>&1 </dev/null
+      $sudo curl -fsSL "https://raw.githubusercontent.com/ThatOneCalculator/NerdFetch/main/nerdfetch" -o /usr/bin/nerdfetch > /dev/null 2>&1 </dev/null
+      $sudo chmod u+x /usr/bin/nerdfetch > /dev/null 2>&1 </dev/null
       echo
       echo "Nerdfetch installed."
       echo
@@ -555,7 +567,7 @@ welcome() { # is the only visible thing at launch.  welcome message.
   printf "\n"
 
   if has_cmd nerdfetch /usr/bin/nerdfetch; then
-    sudo /usr/bin/nerdfetch $flag            # change this if you need. if you use nerdfont, remove the flag. if you use cozette, use -c. and if you use phosphor, use -p. if you use none of this, use -e. (usually automatic)
+    $sudo /usr/bin/nerdfetch $flag            # change this if you need. if you use nerdfont, remove the flag. if you use cozette, use -c. and if you use phosphor, use -p. if you use none of this, use -e. (usually automatic)
   fi
 
   printf "\n"
