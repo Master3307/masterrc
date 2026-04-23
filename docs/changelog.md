@@ -11,6 +11,16 @@ icon: material/newspaper
 ## Updates
 
 ---
+### 006 - Random
+
+---
+hello there!
+
+I am just randomly making a new news thing here right now just because I want to try something and I couldn't find what else to commit. 
+
+I want to be able to work on this project in school or anywhere actually XD so I am installing VS code server on my server with the repo in it.
+
+yayy
 ### 005 - Big Changes
 
 ---
