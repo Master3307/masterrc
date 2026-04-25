@@ -1,10 +1,6 @@
 # Custom:
 # MrKoby07 was hereee
 
-# custom PS1 line:
-PS1='\[\e[1;33m\]< \[\e[0m\]\[\e[1;32m\]\u\[\e[0m\]\[\e[1;31m\]@\[\e[0m\]\[\e[1;34m\]\h\[\e[0m\]\[\e[1;33m\] > \[\e[0m\]\[\e[1;35m\]\w\[\e[0m\]\[\e[1;30m\] \$\[\e[0m\] '
-# Displays as "< master3307@MasterUSBPC > ~ $" for example
-
 # Colors
 # Reset
 R='\e[0m'
@@ -98,28 +94,9 @@ elif has_cmd pikaur /usr/bin/pikaur; then
 elif has_cmd /usr/bin/pacman pacman; then
   helper="pacman"
 fi
-# If youw ant to force a helper:
+
+# If you want to force a helper:
 #helper=""
-
-
-
-# Typofix and other small update commands
-alias vencord='echo Starting Vencord installer... && echo Elevating with sudo... && sudo "$HOME/.local/bin/vencord"'
-alias sudp='sudo'
-alias la="ls -a"
-alias sl="ls"
-alias bye-bye="poweroff"
-alias yodel="echo"
-
-
-
-# hacker-mode
-alias btop-install="sudo apt install btop"
-alias hack="cmatrix"
-alias hacking="cmatrix"
-alias hacker="cmatrix"
-alias hacker-mode="cmatrix"
-alias hacker-interface="btop"
 
 
 
@@ -655,6 +632,17 @@ welcome # dear user :3
 
 
 
+help() {
+  printf "\n${B_BLUE}Available masterrc commands:${R}\n\n"
+
+  printf "  ${GREEN}welcome${R} - Show welcome message\n"
+  printf "  ${GREEN}help${R}    - Show this help message\n"
+  printf "  ${GREEN}aptt${R}    - Update everything (APT, Flatpak, Discord, etc.)\n"
+  printf "  ${GREEN}feature${R} - Install additional features like fortune and nerdfetch\n"
+
+
+  printf "\nFor more info, visit the docs: ${BLUE}https://masterrc-docs.master3307.org/usage${R}\n\n"
+}
 
 
 
@@ -663,4 +651,18 @@ welcome # dear user :3
 
 
 
+main() {
+  local cmd="${1:-help}"
+  shift || true
 
+  case "$cmd" in
+    welcome) welcome ;;  
+    help)    help ;;
+    aptt)    aptt ;;
+    feature) feature ;;
+    *)       printf "Unknown command: ${cmd}\n\ntry ${RED}masterrc help${R}\nor visit the docs: ${BLUE}https://masterrc-docs.master3307.org${R}\n\n"; return 1;;
+  esac
+}
+
+
+main "$@"
