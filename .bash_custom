@@ -196,7 +196,7 @@ flag="$(nerdfetch_font_flag)"
 
 
 sudo_nopass() {
-    $sudo -n true 2>/dev/null
+    sudo -n true 2>/dev/null
 }
 
 
@@ -365,12 +365,12 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
     printf -- "\n${RED}------------------------------\n"
     printf "Authenticating...\n\n"
     $sudo -v
-    if has_cmd nerdfetch /usr/bin/nerdfetch; then
-      nerdfetch_nopasswd
-    fi
   fi
 
-
+  if has_cmd nerdfetch /usr/bin/nerdfetch; then
+    nerdfetch_nopasswd
+  fi
+ 
   # 100% always updating masterrc
   printf -- "\n${PURPLE}------------------------------\n"
   printf "Updating Masterrc...\n\n"
