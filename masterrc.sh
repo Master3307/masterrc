@@ -85,10 +85,10 @@ helper=""
 
 if has_cmd cachy-update /usr/bin/cachy-update; then
   helper="cachy"
-elif has_cmd yay /usr/bin/yay; then
-  helper="yay"
 elif has_cmd paru /usr/bin/paru; then
   helper="paru"
+elif has_cmd yay /usr/bin/yay; then
+  helper="yay"
 elif has_cmd pikaur /usr/bin/pikaur; then
   helper="pikaur"
 elif has_cmd /usr/bin/pacman pacman; then
