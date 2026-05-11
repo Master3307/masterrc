@@ -1,3 +1,7 @@
+#!/usr/bin/env bash
+
+
+
 # Custom:
 # MrKoby07 was hereee
 
@@ -172,7 +176,7 @@ flag="$(nerdfetch_font_flag)"
 
 
 sudo_nopass() {
-    $sudo -n true 2>/dev/null
+    sudo -n true 2>/dev/null
 }
 
 
@@ -340,7 +344,7 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
   if ! sudo_nopass; then
     printf -- "\n${RED}------------------------------\n"
     printf "Authenticating...\n\n"
-    $sudo -v
+    sudo -v
     if has_cmd nerdfetch /usr/bin/nerdfetch; then
       nerdfetch_nopasswd
     fi
@@ -448,15 +452,16 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
 
 
   # TODO: make the /usr/ directory always decided on if it's termux or not. for compatibility
+  # TODO: also, fix.
   printf  "\n\n${PURPLE}Updated Everything, Enjoy :D\n"
   if command -v /usr/games/fortune >/dev/null 2>&1; then
     printf "Have a fortune :3\n\n${R}"
-    if ! command -v /usr/games/cowsay >/dev/null 2>&1; then
+    if ! has_cmd /usr/games/cowsay cowsay; then
       printf '"\n'
       fortune_any
       printf '"\n'
     else
-      fortune_any| /usr/games/cowsay -f sheep
+      fortune_any | /usr/games/cowsay -f sheep
     fi
   fi
   printf "\n\n"
@@ -544,9 +549,32 @@ feature() { # install additional features like fortune or nerdfetch.
 }
 
 
+# Upload Internet Archive Commands:
+uia_setup() { # Initial Setup for UIA
+  cat > "$HOME/channels.txt" << 'EOF'
+
+# Add The Channels that you Downloaded via MeTube above this line.
+# This Script is made for the downloads to be stored at /opt/metube_downloads/[channel_name]
+EOF
+  nano "$HOME/channels.txt"
+  printf "\nYou created the channels.txt file.\nNow you can run ${RED}uia${R} to upload the channels you downloaded to the Internet Archive :D\nEdit channels.txt whenever you want at ${GREEN}${HOME}/channels.txt${R}\n\n"
+}
 
 
+uia() { # UIA Script itself, uploads to Internet Archive.
+  if [[ ! -x "$HOME/uia/uia.sh" ]]; then
+    printf "Upload Internet Archive is giving an error. Try installing it with ${RED}uuia${R} first.\n\nDon't know what it is?\nCheck here: ${BLUE}https://gist.github.com/Master3307/167a0ebf150ec72aae1c26d008a84fde${R}\n\n"
+  else
+    $HOME/uia/uia.sh
+    echo "Finished uploading. (If this is your only output, it means that you didn't set anything in channels.txt)"
+  fi
+}
 
+
+uuia() { # Installs UIA. Only run once.
+  git clone "https://gist.github.com/Master3307/167a0ebf150ec72aae1c26d008a84fde" ~/uia/ # Clone the Repo
+  chmod +x ~/uia/uia.sh # Ensure Permissions
+}
 
 
 
@@ -585,11 +613,6 @@ welcome() { # is the only visible thing at launch.  welcome message.
   printf "\n\n"
 }
 
-alias welcum="clear && welcome"
-alias updates="aptt"
-alias upgrades="aptt"
-alias update-all="aptt"
-alias upgrade-all="aptt"
 
 
 
@@ -601,44 +624,23 @@ alias upgrade-all="aptt"
 
 
 
+help() { # General Help Message. Shows all available commands that work with masterrc.
+  printf "\n${B_BLUE}Available masterrc commands:${R}\n"
 
+  printf "  ${GREEN}help${R}  . . . . . . . . Show this help message\n"
+  printf "  ${GREEN}welcome${R} . . . . . . . Show welcome message\n"
+  printf "  ${GREEN}aptt${R}  . . . . . . . . Update everything (APT, Flatpak, Discord, etc.)\n"
+  printf "  ${GREEN}masterrc${R}  . . . . . . Update/Reinstall masterrc\n"
+  printf "  ${GREEN}feature${R} . . . . . . . Install additional features like fortune and nerdfetch\n\n"
 
+  printf "  ${GREEN}ugit${R}  . . . . . . . . Quick GitHub upload (git add, commit, push)\n"
+  printf "  ${GREEN}discord-update${R}  . . . Updates Discord in ${RED}Debian${R} Systems\n"
+  printf "  ${GREEN}discord-install${R} . . . Install Discord in ${RED}Debian${R} Systems\n"
 
-
-
-
-
-
-
-#######################
-
-welcome # dear user :3
-# You are so great :D
-
-#######################
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-help() {
-  printf "\n${B_BLUE}Available masterrc commands:${R}\n\n"
-
-  printf "  ${GREEN}welcome${R} - Show welcome message\n"
-  printf "  ${GREEN}help${R}    - Show this help message\n"
-  printf "  ${GREEN}aptt${R}    - Update everything (APT, Flatpak, Discord, etc.)\n"
-  printf "  ${GREEN}feature${R} - Install additional features like fortune and nerdfetch\n"
+  printf "\n${RED}Advanced:${R}\n"
+  printf "  ${GREEN}uuia${R}  . . . . . . . . Install Upload Internet Archive\n"
+  printf "  ${GREEN}suia${R}  . . . . . . . . Setup Upload Internet Archive\n"
+  printf "  ${GREEN}uia${R} . . . . . . . . . Upload Internet Archive (requires setup)\n\n"
 
 
   printf "\nFor more info, visit the docs: ${BLUE}https://masterrc-docs.master3307.org/usage${R}\n\n"
@@ -659,7 +661,16 @@ main() {
     welcome) welcome ;;  
     help)    help ;;
     aptt)    aptt ;;
+    updates)  aptt ;;
+    upgrades) aptt ;;
     feature) feature ;;
+    uia)     uia ;;
+    uuia)    uuia;;
+    suia)    uia_setup ;;
+    ugit)    ugit ;;
+    discord-update) discord-update ;;
+    discord-install) discord-install ;;
+    masterrc) bash <(curl -fsSL https://raw.githubusercontent.com/Master3307/masterrc/refs/heads/master/install.sh) ;;
     *)       printf "Unknown command: ${cmd}\n\ntry ${RED}masterrc help${R}\nor visit the docs: ${BLUE}https://masterrc-docs.master3307.org${R}\n\n"; return 1;;
   esac
 }

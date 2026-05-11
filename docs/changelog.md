@@ -11,6 +11,18 @@ icon: material/newspaper
 ## Updates
 
 ---
+
+### 007 - Progress
+
+---
+I am happy to be able to say that I am finally able to make some Progress on this thing again!
+
+Now I am almost completely through with changing it to the new code Structure.
+
+One can still use the same commands just like before. Now it should be better and more clean tho.
+
+Have fun! :D
+
 ### 006 - Random
 
 ---
@@ -21,6 +33,7 @@ I am just randomly making a new news thing here right now just because I want to
 I want to be able to work on this project in school or anywhere actually XD so I am installing VS code server on my server with the repo in it.
 
 yayy
+
 ### 005 - Big Changes
 
 ---
