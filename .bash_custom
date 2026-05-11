@@ -125,8 +125,6 @@ alias hacker-interface="btop"
 
 
 
-
-
 # General masterrc commands
 alias welcum="clear && masterrc welcome"
 alias welcome="masterrc welcome"
