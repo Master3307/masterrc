@@ -2,11 +2,9 @@
 set -euo pipefail
 
 BASH_CUSTOM_URL="https://raw.githubusercontent.com/Master3307/masterrc/refs/heads/master/.bash_custom"
-PROFILE_URL="https://raw.githubusercontent.com/Master3307/masterrc/refs/heads/master/profile.sh"
 
 TARGET_FILE="$HOME/.bash_custom"
 MASTERRC_DIR="$HOME/.masterrc"
-PROFILE_FILE="$MASTERRC_DIR/profile.sh"
 
 BASHRC_FILE="$HOME/.bashrc"
 SOURCE_LINE='[ -f "$HOME/.bash_custom" ] && source "$HOME/.bash_custom"'
@@ -85,6 +83,15 @@ INVERT='\e[7m'
 STRIKE='\e[9m'
 
 
+
+if [ "$(id -u)" -eq 0 ] || [ -n "${TERMUX_VERSION:-}" ] || [[ "${PREFIX:-}" == *com.termux* ]]; then
+    sudo=""
+else
+    sudo="sudo"
+fi
+
+
+
 echo
 echo "              ----------------"
 echo "Downloading ~/.bash_custom"
@@ -112,11 +119,20 @@ else
   echo
 fi
 
+echo
+echo "              ----------------"
+echo "Installing MasterRC"
+
+$sudo curl -fsSL https://raw.githubusercontent.com/Master3307/masterrc/refs/heads/master/masterrc.sh -o /usr/local/bin/masterrc
+$sudo chmod +x /usr/local/bin/masterrc
+
+echo
+
 echo "              ----------------"
 printf "${R}Done, Installed/Updated masterrc.\n"
 printf "... and have fun with whatever you just installed :3\n\n"
-printf "Feel free to try \"${RED}aptt${R}\" in a Terminal. It updates everything.\n"
-printf "Also.. you can run \"${RED}feature${R}\" to install additional features and "'!'"\n\nReload your shell with: ${RED}source ~/.bashrc${R}\n\n"
+printf "Feel free to try \"${RED}masterrc aptt${R}\" in a Terminal. It updates everything.\n"
+printf "Also.. you can run \"${RED}masterrc feature${R}\" to install additional features and "'!'"\n\nReload your shell with: ${RED}source ~/.bashrc${R}\n\n"
 
 
 
