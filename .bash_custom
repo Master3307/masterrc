@@ -138,8 +138,12 @@ alias upgrade-all="masterrc aptt"
 alias ugit="masterrc ugit"
 alias feature="masterrc feature"
 
-
-
+# UIA
+alias uuia="masterrc uuia"
+alias suia="masterrc suia"
+alias uuuia="masterrc uuuia"
+alias uia="masterrc uia"
+alias uninstall-uia="masterrc uninstall-uia"
 
 
 
