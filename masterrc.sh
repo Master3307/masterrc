@@ -357,6 +357,12 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
   bash <(curl -fsSL https://raw.githubusercontent.com/Master3307/masterrc/refs/heads/master/install.sh)
 
 
+  if [ -f "$HOME/uia/uia.sh" ]; then
+    printf -- "\n${WHITE}------------------------------\n"
+    printf "Updating UIA...\n\n"
+    masterrc uuuia
+  fi
+
 # Checking for package manager and Updating that one.
   if has_cmd /usr/bin/flatpak flatpak; then
     printf -- "\n${YELLOW}------------------------------\n"
@@ -577,6 +583,38 @@ uuia() { # Installs UIA. Only run once.
 }
 
 
+uuuia() { # Update UIA. I know, It's really primitive :/
+  rm -rf $HOME/uia
+  git clone "https://gist.github.com/Master3307/167a0ebf150ec72aae1c26d008a84fde" $HOME/uia/ # Clone the Repo
+  chmod +x $HOME/uia/uia.sh # Ensure Permissions
+}
+
+uninstall-uia() {
+  read -r -p 'Do you *really* want to uninstall UIA? [y/N] ' answer
+  case "$answer" in
+    [yY]|[yY][eE][sS])
+      if [ -f "$HOME/uia/uia.sh" ]; then
+          rm -rf "$HOME/uia/"
+          echo
+          echo "(hopefully) removed UIA files."
+          if [ -f "$HOME/channels.txt" ]; then
+              read -r -p 'Delete "channels.txt"? [y/N] ' answer
+              case "$answer" in
+                  [yY]|[yY][eE][sS])
+                      rm -vf "$HOME/channels.txt"
+                      ;;
+              esac
+          else
+              echo "channels.txt does not exist."
+              echo
+          fi
+      else
+          echo "UIA is not installed."
+      fi
+      ;;
+  esac
+}
+
 
 
 
@@ -625,7 +663,9 @@ welcome() { # is the only visible thing at launch.  welcome message.
 
 
 help() { # General Help Message. Shows all available commands that work with masterrc.
-  printf "\n${B_BLUE}Available masterrc commands:${R}\n"
+
+
+  printf "\n\n${B_BLUE}(Main) MasterRC commands:${R}\n"
 
   printf "  ${GREEN}help${R}  . . . . . . . . Show this help message\n"
   printf "  ${GREEN}welcome${R} . . . . . . . Show welcome message\n"
@@ -637,13 +677,20 @@ help() { # General Help Message. Shows all available commands that work with mas
   printf "  ${GREEN}discord-update${R}  . . . Updates Discord in ${RED}Debian${R} Systems\n"
   printf "  ${GREEN}discord-install${R} . . . Install Discord in ${RED}Debian${R} Systems\n"
 
-  printf "\n${RED}Advanced:${R}\n"
-  printf "  ${GREEN}uuia${R}  . . . . . . . . Install Upload Internet Archive\n"
-  printf "  ${GREEN}suia${R}  . . . . . . . . Setup Upload Internet Archive\n"
+
+  printf "\n${RED}(Some) Advanced commands:${R}\n"
+
+  # TODO: make it more organized
+  printf "  ${GREEN}uuia${R}  . . . . . . . . Install Upload Internet Archive (only run once.)\n"
+  printf "  ${GREEN}uuuia${R} . . . . . . . . Update Upload Internet Archive\n"
+  printf "  ${GREEN}uninstall-uia${R} . . . . Uninstall Upload Internet Archive\n"
+  printf "  ${GREEN}suia${R}  . . . . . . . . Setup Upload Internet Archive for the first time\n"
   printf "  ${GREEN}uia${R} . . . . . . . . . Upload Internet Archive (requires setup)\n\n"
 
 
   printf "\nFor more info, visit the docs: ${BLUE}https://masterrc-docs.master3307.org/usage${R}\n\n"
+
+
 }
 
 
@@ -658,22 +705,33 @@ main() {
   shift || true
 
   case "$cmd" in
+  # Main commands
     welcome) welcome ;;  
     help)    help ;;
     aptt)    aptt ;;
+    masterrc) bash <(curl -fsSL https://raw.githubusercontent.com/Master3307/masterrc/refs/heads/master/install.sh) ;;
     updates)  aptt ;;
     upgrades) aptt ;;
     feature) feature ;;
-    uia)     uia ;;
-    uuia)    uuia;;
-    suia)    uia_setup ;;
+  
+  # Other commands
     ugit)    ugit ;;
     discord-update) discord-update ;;
     discord-install) discord-install ;;
-    masterrc) bash <(curl -fsSL https://raw.githubusercontent.com/Master3307/masterrc/refs/heads/master/install.sh) ;;
+
+  # UIA commands
+    uia)     uia ;;
+    uuia)    uuia;;
+    uuuia)   uuuia;;
+    uninstall-uia) uninstall-uia ;;
+    suia)    uia_setup ;;
+  
     *)       printf "Unknown command: ${cmd}\n\ntry ${RED}masterrc help${R}\nor visit the docs: ${BLUE}https://masterrc-docs.master3307.org${R}\n\n"; return 1;;
   esac
 }
 
 
 main "$@"
+
+# hi :) 
+# how are ya? :D

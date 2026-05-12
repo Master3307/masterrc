@@ -98,14 +98,6 @@ echo "Downloading ~/.bash_custom"
 curl -fsSL "$BASH_CUSTOM_URL" -o "$TARGET_FILE"
 echo
 
-# NEW: fetch profile.sh into ~/.masterrc/
-#echo "              ----------------"
-#echo "Downloading profile.sh to ~/.masterrc/profile.sh"
-#mkdir -p "$MASTERRC_DIR"
-#curl -fsSL "$PROFILE_URL" -o "$PROFILE_FILE"
-#chmod +x "$PROFILE_FILE"
-#echo
-
 if [ ! -f "$BASHRC_FILE" ]; then
   touch "$BASHRC_FILE"
 fi
@@ -121,18 +113,20 @@ fi
 
 echo
 echo "              ----------------"
-echo "Installing MasterRC"
+echo "Installing MasterRC commands to /usr/local/bin/masterrc"
 
 $sudo curl -fsSL https://raw.githubusercontent.com/Master3307/masterrc/refs/heads/master/masterrc.sh -o /usr/local/bin/masterrc
 $sudo chmod +x /usr/local/bin/masterrc
 
+echo
+echo "Installed MasterRC"
 echo
 
 echo "              ----------------"
 printf "${R}Done, Installed/Updated masterrc.\n"
 printf "... and have fun with whatever you just installed :3\n\n"
 printf "Feel free to try \"${RED}masterrc aptt${R}\" in a Terminal. It updates everything.\n"
-printf "Also.. you can run \"${RED}masterrc feature${R}\" to install additional features and "'!'"\n\nReload your shell with: ${RED}source ~/.bashrc${R}\n\n"
+printf "Also.. you can run \"${RED}masterrc help${R}\" to see all available commands.\n\nReload your shell with: ${RED}source ~/.bashrc${R}\n\n"
 
 
 

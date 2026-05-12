@@ -12,6 +12,22 @@ icon: material/newspaper
 
 ---
 
+### 008 - Working on some small stuff
+
+---
+so I am just working on some other stuff too right now. for example, I added [UIA](https://gist.github.com/Master3307/167a0ebf150ec72aae1c26d008a84fde) to the entire app – something that uploads Videos to Internet Archive automatically!
+
+And can we just appreciate how nice and clean the help menu looks?
+
+![Help](media/help_menu.png)
+
+<details>
+<summary>I had the Idea for the dots to make lines clear from Stardew Valley:</summary>
+<img src="https://static1.thegamerimages.com/wordpress/wp-content/uploads/2021/02/Sell-Screen.jpg" alt="Sell Screen">
+</details>
+
+yeah... but it is really fun to work on this thing. I love to be able to do some random projects.
+
 ### 007 - Progress
 
 ---
@@ -28,7 +44,7 @@ Have fun! :D
 ---
 hello there!
 
-I am just randomly making a new news thing here right now just because I want to try something and I couldn't find what else to commit. 
+I am just randomly making a new news thing here right now just because I want to try something and I couldn't find what else to commit.
 
 I want to be able to work on this project in school or anywhere actually XD so I am installing VS code server on my server with the repo in it.
 
@@ -130,7 +146,7 @@ Truly a relic.
 ### 001 - Changelog added
 
 ---
-So, I just added the changelog. This will be more me just taking about what I am working on right here. Kind of like news, so I named it "News". 
+So, I just added the changelog. This will be more me just taking about what I am working on right here. Kind of like news, so I named it "News".
 
 Things I got so far in these docs is [Welcome](index.md) and [Idea](idea.md).
 
