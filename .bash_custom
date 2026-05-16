@@ -106,12 +106,13 @@ fi
 if [ -n "${TERMUX_VERSION:-}" ] || [[ "${PREFIX:-}" == *com.termux* ]]; then
     nerdfetch_target="${PREFIX:-/data/data/com.termux/files/usr}/bin/nerdfetch"
     nerdfetch_chmod="a+x"
-    tbin="${PREFIX:-/data/data/com.termux/files/usr/bin/}"
+    is_termux_usr="${PREFIX:-/data/data/com.termux/files/usr/}"
 else
     nerdfetch_target="/usr/bin/nerdfetch"
     nerdfetch_chmod="u+x"
-    tbin="/usr/bin/"
+    is_termux_usr="/usr"
 fi
+
 
 
 
