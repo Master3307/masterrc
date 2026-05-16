@@ -365,9 +365,11 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
 
 # Checking for package manager and Updating that one.
   if has_cmd /usr/bin/flatpak flatpak; then
-    printf -- "\n${YELLOW}------------------------------\n"
-    printf "Updating Flatpak...\n\n"
-    flatpak update
+    if ! has_cmd /usr/bin/cachy-update cachy-update; then
+      printf -- "\n${YELLOW}------------------------------\n"
+      printf "Updating Flatpak...\n\n"
+      flatpak update
+    fi
   fi
 
   if has_cmd /usr/bin/apt apt; then
@@ -443,24 +445,25 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
   fi
 
   if has_cmd /usr/bin/pacman pacman; then
-      orphans="$(pacman -Qdtq 2>/dev/null || true)"
-      if [ -n "$orphans" ]; then
-        printf -- "\n${RED}------------------------------\n"
-        printf "Doing autoremove...\n\n"
-        printf '%s\n' "$orphans"
-        $sudo pacman -Rns $orphans
-      else
-        printf -- "\n${RED}------------------------------\n"
-        printf "Doing autoremove...\n\n"
-        echo "No pacman autoremove candidates found."
-      fi
+    if ! has_cmd /usr/bin/cachy-update cachy-update; then
+        orphans="$(pacman -Qdtq 2>/dev/null || true)"
+        if [ -n "$orphans" ]; then
+          printf -- "\n${RED}------------------------------\n"
+          printf "Doing autoremove...\n\n"
+          printf '%s\n' "$orphans"
+          $sudo pacman -Rns $orphans
+        else
+          printf -- "\n${RED}------------------------------\n"
+          printf "Doing autoremove...\n\n"
+          echo "No pacman autoremove candidates found."
+        fi
+    fi
   fi
 
 
   # TODO: make the /usr/ directory always decided on if it's termux or not. for compatibility
-  # TODO: also, fix.
   printf  "\n\n${PURPLE}Updated Everything, Enjoy :D\n"
-  if command -v /usr/games/fortune >/dev/null 2>&1; then
+  if has_cmd /usr/games/fortune fortune; then
     printf "Have a fortune :3\n\n${R}"
     if ! has_cmd /usr/games/cowsay cowsay; then
       printf '"\n'
