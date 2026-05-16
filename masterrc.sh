@@ -184,7 +184,9 @@ flag="$(nerdfetch_font_flag)"
 
 
 sudo_nopass() {
+  if [ "$is_termux_usr" = "/usr" ]; then
     sudo -n true 2>/dev/null
+  fi
 }
 
 
@@ -353,11 +355,11 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
     printf -- "\n${RED}------------------------------\n"
     printf "Authenticating...\n\n"
     sudo -v
-    if has_cmd nerdfetch $is_termux_usr/bin/nerdfetch; then
-      nerdfetch_nopasswd
-    fi
   fi
 
+  if has_cmd nerdfetch $is_termux_usr/bin/nerdfetch; then
+    nerdfetch_nopasswd
+  fi
 
   # 100% always updating masterrc
   printf -- "\n${PURPLE}------------------------------\n"
