@@ -103,6 +103,17 @@ fi
 #helper=""
 
 
+if [ -n "${TERMUX_VERSION:-}" ] || [[ "${PREFIX:-}" == *com.termux* ]]; then
+    nerdfetch_target="${PREFIX:-/data/data/com.termux/files/usr}/bin/nerdfetch"
+    nerdfetch_chmod="a+x"
+    tbin="${PREFIX:-/data/data/com.termux/files/usr/bin/}"
+else
+    nerdfetch_target="/usr/bin/nerdfetch"
+    nerdfetch_chmod="u+x"
+    tbin="/usr/bin/"
+fi
+
+
 
 # Typofix and other small update commands
 alias sudp='sudo'

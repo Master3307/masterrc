@@ -84,24 +84,6 @@ has_cmd() { # see if command exists or not
 }
 
 
-# helper priority list:
-helper=""
-
-if has_cmd cachy-update /usr/bin/cachy-update; then
-  helper="cachy"
-elif has_cmd paru /usr/bin/paru; then
-  helper="paru"
-elif has_cmd yay /usr/bin/yay; then
-  helper="yay"
-elif has_cmd pikaur /usr/bin/pikaur; then
-  helper="pikaur"
-elif has_cmd /usr/bin/pacman pacman; then
-  helper="pacman"
-fi
-
-# If you want to force a helper:
-#helper=""
-
 
 
 
@@ -113,23 +95,49 @@ else
 fi
 
 
+
+# check if the user is using termux or anything else to use to right bin for termux compatibility. (still got some other stuff in it :/)
+# TODO: make this prettier.
 if [ -n "${TERMUX_VERSION:-}" ] || [[ "${PREFIX:-}" == *com.termux* ]]; then
     nerdfetch_target="${PREFIX:-/data/data/com.termux/files/usr}/bin/nerdfetch"
     nerdfetch_chmod="a+x"
-    nerdfetch_bin="${PREFIX:-/data/data/com.termux/files/usr}/bin/nerdfetch"
+    is_termux_usr="${PREFIX:-/data/data/com.termux/files/usr/}"
 else
     nerdfetch_target="/usr/bin/nerdfetch"
     nerdfetch_chmod="u+x"
-    nerdfetch_bin="/usr/bin/nerdfetch"
+    is_termux_usr="/usr"
 fi
 
 
 
+# helper priority list:
+helper=""
+
+if has_cmd cachy-update $is_termux_usr/bin/cachy-update; then
+  helper="cachy"
+elif has_cmd paru $is_termux_usr/bin/paru; then
+  helper="paru"
+elif has_cmd yay $is_termux_usr/bin/yay; then
+  helper="yay"
+elif has_cmd pikaur $is_termux_usr/bin/pikaur; then
+  helper="pikaur"
+elif has_cmd pacman $is_termux_usr/bin/pacman; then
+  helper="pacman"
+fi
+
+# If you want to force a helper:
+#helper=""
+
+
+
+
+
+
 fortune_any() {
-  if [ -x /usr/bin/fortune ]; then
-    /usr/bin/fortune "$@"
-  elif [ -x /usr/games/fortune ]; then
-    /usr/games/fortune "$@"
+  if [ -x $is_termux_usr/bin/fortune ]; then
+    $is_termux_usr/bin/fortune "$@"
+  elif [ -x $is_termux_usr/games/fortune ]; then
+    $is_termux_usr/games/fortune "$@"
   else
     # fallback: if fortune is in PATH under some other layout
     if command -v fortune >/dev/null 2>&1; then
@@ -146,7 +154,7 @@ fortune_any() {
 nerdfetch_font_flag() { # Check for what nerdfetch compatible font is installed
   # Check for any Nerd Font
 
-  if has_cmd fc-list /usr/bin/fc-list; then
+  if has_cmd fc-list $is_termux_usr/bin/fc-list; then
     if fc-list | grep -qi "nerd"; then
       # Nerd Font found → output nothing (success, empty)
       return 0
@@ -190,7 +198,7 @@ nerdfetch_nopasswd() {
   local u f line
   u="$USER"
   f="/etc/sudoers.d/nerdfetch-$u"
-  line="$u ALL=(root) NOPASSWD: /usr/bin/nerdfetch"
+  line="$u ALL=(root) NOPASSWD: $is_termux_usr/bin/nerdfetch"
 
   $sudo sh -c '
     f="$1"
@@ -270,7 +278,7 @@ alias hacking-install="hack-install"
 
 discord-install() { # Discord install command
 
-  if has_cmd /usr/bin/apt apt; then
+  if has_cmd $is_termux_usr/bin/apt apt; then
     local api_url final_url remote_ver installed_ver tmp
 
     api_url="https://discord.com/api/download/stable?platform=linux&format=deb"
@@ -294,7 +302,7 @@ discord-install() { # Discord install command
 
 discord-update() { # Discord update command
 
-   if has_cmd /usr/bin/apt apt; then
+   if has_cmd $is_termux_usr/bin/apt apt; then
       printf -- "\n${BLUE}------------------------------\n"
       printf "Checking Discord...\n\n"
 
@@ -334,7 +342,7 @@ discord-update() { # Discord update command
 
 aptt() { # This is the Main update command. It updates pretty much everything. We got: APT, Flatpak, Discord, other package managers, masterrc.. list goes on and on.
 
-  if has_cmd /usr/bin/update update; then
+  if has_cmd $is_termux_usr/bin/update update; then
     printf -- "\n${YELLOW}------------------------------\n"
     printf "Trying Update command...\n\n"
       $sudo update
@@ -345,7 +353,7 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
     printf -- "\n${RED}------------------------------\n"
     printf "Authenticating...\n\n"
     sudo -v
-    if has_cmd nerdfetch /usr/bin/nerdfetch; then
+    if has_cmd nerdfetch $is_termux_usr/bin/nerdfetch; then
       nerdfetch_nopasswd
     fi
   fi
@@ -364,20 +372,22 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
   fi
 
 # Checking for package manager and Updating that one.
-  if has_cmd /usr/bin/flatpak flatpak; then
-    printf -- "\n${YELLOW}------------------------------\n"
-    printf "Updating Flatpak...\n\n"
-    flatpak update
+  if has_cmd $is_termux_usr/bin/flatpak flatpak; then
+    if ! has_cmd $is_termux_usr/bin/cachy-update cachy-update; then
+      printf -- "\n${YELLOW}------------------------------\n"
+      printf "Updating Flatpak...\n\n"
+      flatpak update
+    fi
   fi
 
-  if has_cmd /usr/bin/apt apt; then
+  if has_cmd $is_termux_usr/bin/apt apt; then
     printf -- "\n${WHITE}------------------------------\n"
     printf "Updating APT...\n\n"
     $sudo apt update
   fi
 
 
-  if has_cmd /usr/bin/pacman pacman; then
+  if has_cmd $is_termux_usr/bin/pacman pacman; then
     printf -- "\n${WHITE}------------------------------\n"
     printf "Updating ${helper}...\n\n"
     if [ "$helper" = "pacman" ]; then
@@ -390,21 +400,21 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
   fi
 
 
-  if has_cmd /usr/bin/dnf dnf; then
+  if has_cmd $is_termux_usr/bin/dnf dnf; then
     printf -- "\n${BLUE}------------------------------\n"
     printf "Updating Dnf...\n\n"
     $sudo dnf upgrade --refresh
   fi
 
 
-  if has_cmd /usr/bin/zypper zypper; then
+  if has_cmd $is_termux_usr/bin/zypper zypper; then
     printf -- "\n${GREEN}------------------------------\n"
     printf "Updating Zypper...\n\n"
     $sudo zypper refresh
     $sudo zypper update
   fi
 
-  if has_cmd /usr/bin/snap snap; then
+  if has_cmd $is_termux_usr/bin/snap snap; then
     printf -- "\n${CYAN}------------------------------\n"
     printf "Refreshing Snap...\n\n"
     $sudo snap refresh
@@ -412,62 +422,63 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
 
 
   # Discord update
-  if has_cmd /usr/bin/discord discord; then
+  if has_cmd $is_termux_usr/bin/discord discord; then
     discord-update
   fi
 
   # Finishing APT upgrades
-  if has_cmd /usr/bin/apt apt; then
+  if has_cmd $is_termux_usr/bin/apt apt; then
     printf -- "\n${GREEN}------------------------------\n"
     printf "Doing upgrade...\n\n"
     $sudo apt upgrade
   fi
 
-  if has_cmd /usr/bin/apt apt; then
+  if has_cmd $is_termux_usr/bin/apt apt; then
     printf -- "\n${B_GREEN}------------------------------\n"
     printf "Doing full-upgrade...\n\n"
     $sudo apt full-upgrade
   fi
 
 # Autoremove
-  if has_cmd /usr/bin/apt apt; then
+  if has_cmd $is_termux_usr/bin/apt apt; then
     printf -- "\n${RED}------------------------------\n"
     printf "Doing autoremove...\n\n"
       $sudo apt autoremove
   fi
 
-  if has_cmd /usr/bin/dnf dnf; then
+  if has_cmd $is_termux_usr/bin/dnf dnf; then
     printf -- "\n${RED}------------------------------\n"
     printf "Doing autoremove...\n\n"
       $sudo dnf autoremove
   fi
 
-  if has_cmd /usr/bin/pacman pacman; then
-      orphans="$(pacman -Qdtq 2>/dev/null || true)"
-      if [ -n "$orphans" ]; then
-        printf -- "\n${RED}------------------------------\n"
-        printf "Doing autoremove...\n\n"
-        printf '%s\n' "$orphans"
-        $sudo pacman -Rns $orphans
-      else
-        printf -- "\n${RED}------------------------------\n"
-        printf "Doing autoremove...\n\n"
-        echo "No pacman autoremove candidates found."
-      fi
+  if has_cmd $is_termux_usr/bin/pacman pacman; then
+    if ! has_cmd $is_termux_usr/bin/cachy-update cachy-update; then
+        orphans="$(pacman -Qdtq 2>/dev/null || true)"
+        if [ -n "$orphans" ]; then
+          printf -- "\n${RED}------------------------------\n"
+          printf "Doing autoremove...\n\n"
+          printf '%s\n' "$orphans"
+          $sudo pacman -Rns $orphans
+        else
+          printf -- "\n${RED}------------------------------\n"
+          printf "Doing autoremove...\n\n"
+          echo "No pacman autoremove candidates found."
+        fi
+    fi
   fi
 
 
   # TODO: make the /usr/ directory always decided on if it's termux or not. for compatibility
-  # TODO: also, fix.
   printf  "\n\n${PURPLE}Updated Everything, Enjoy :D\n"
-  if command -v /usr/games/fortune >/dev/null 2>&1; then
+  if has_cmd $is_termux_usr/bin/fortune fortune; then
     printf "Have a fortune :3\n\n${R}"
-    if ! has_cmd /usr/games/cowsay cowsay; then
+    if ! has_cmd $is_termux_usr/bin/cowsay cowsay; then
       printf '"\n'
       fortune_any
       printf '"\n'
     else
-      fortune_any | /usr/games/cowsay -f sheep
+      fortune_any | $is_termux_usr/bin/cowsay -f sheep
     fi
   fi
   printf "\n\n"
@@ -482,7 +493,7 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
 
 ugit() { # quick github upload
 
-  if has_cmd /usr/bin/git git; then
+  if has_cmd $is_termux_usr/bin/git git; then
     git pull
     git add .
     git commit
@@ -500,9 +511,9 @@ ugit() { # quick github upload
 feature() { # install additional features like fortune or nerdfetch.
 
 # Apt
-  if has_cmd /usr/bin/apt apt; then
+  if has_cmd $is_termux_usr/bin/apt apt; then
     # Install fortune if missing
-    if ! has_cmd fortune /usr/games/fortune; then
+    if ! has_cmd $is_termux_usr/bin/fortune $is_termux_usr/games/fortune; then
       echo "              ----------------"
       echo "Installing Fortune..."
       echo
@@ -513,9 +524,9 @@ feature() { # install additional features like fortune or nerdfetch.
 
 # Pacman
 
-  if has_cmd /usr/bin/pacman pacman; then
+  if has_cmd $is_termux_usr/bin/pacman pacman; then
     # Install fortune if missing
-    if ! has_cmd fortune /usr/games/fortune; then
+    if ! has_cmd $is_termux_usr/bin/fortune $is_termux_usr/games/fortune; then
       echo "              ----------------"
       echo "Installing Fortune..."
       echo
@@ -525,8 +536,8 @@ feature() { # install additional features like fortune or nerdfetch.
   fi
 
   # install nerdfetch if missing
-  if ! has_cmd nerdfetch /usr/bin/nerdfetch; then
-    if ! has_cmd yay /usr/bin/yay; then
+  if ! has_cmd $is_termux_usr/bin/nerdfetch $is_termux_usr/bin/nerdfetch; then
+    if ! has_cmd $is_termux_usr/bin/yay $is_termux_usr/bin/yay; then
       echo "              ----------------"
       echo "Installing nerdfetch..."
       $sudo curl -fsSL "https://raw.githubusercontent.com/ThatOneCalculator/NerdFetch/main/nerdfetch" -o "$nerdfetch_target" > /dev/null 2>&1 </dev/null
@@ -547,7 +558,7 @@ feature() { # install additional features like fortune or nerdfetch.
   fi
 
   # Both present = info message
-  if has_cmd fortune /usr/games/fortune && has_cmd nerdfetch /usr/bin/nerdfetch; then
+  if has_cmd fortune $is_termux_usr/games/fortune && has_cmd nerdfetch $is_termux_usr/bin/nerdfetch; then
     printf "\nFeatures already installed, run ${PURPLE}welcome${R} to see what it is :3\n\n"
   fi
 
@@ -628,7 +639,7 @@ welcome() { # is the only visible thing at launch.  welcome message.
 
   printf "\n"
 
-  if has_cmd fortune /usr/games/fortune; then
+  if has_cmd fortune $is_termux_usr/games/fortune; then
     fortune_any # had to remove -a flag. if you want offensive ones included, customize it.
     printf "\n\n\n"
   fi

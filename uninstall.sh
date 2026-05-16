@@ -55,3 +55,5 @@ fi
 
 echo
 printf "${R}\nUninstalled MasterRC. Last note from the script:\n\n ${RED}I hope it was worth it...\n\n"
+
+# TODO: add logic for uninstalling the new masterrc.sh file.

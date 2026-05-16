@@ -12,6 +12,18 @@ icon: material/newspaper
 
 ---
 
+### 009 - work
+
+---
+hi! it's the 13. May of 2026 and I am in school.
+currently working on this a little lol.
+but I am a bit too exhausted to continue with this.
+
+but I decided to write this instead!
+
+this is so much fun as a long-term project for me :D
+
+
 ### 008 - Working on some small stuff
 
 ---
