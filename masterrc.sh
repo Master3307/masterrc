@@ -184,7 +184,7 @@ flag="$(nerdfetch_font_flag)"
 
 
 sudo_nopass() {
-  if [ "$is_termux_usr" = "/usr" ]; then
+  if ! [ "$is_termux_usr" = "/usr" ]; then
     sudo -n true 2>/dev/null
   fi
 }
