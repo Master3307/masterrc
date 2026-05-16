@@ -90,7 +90,15 @@ else
     sudo="sudo"
 fi
 
-
+if [ -n "${TERMUX_VERSION:-}" ] || [[ "${PREFIX:-}" == *com.termux* ]]; then
+    nerdfetch_target="${PREFIX:-/data/data/com.termux/files/usr}/bin/nerdfetch"
+    nerdfetch_chmod="a+x"
+    is_termux_usr="${PREFIX:-/data/data/com.termux/files/usr/}"
+else
+    nerdfetch_target="/usr/bin/nerdfetch"
+    nerdfetch_chmod="u+x"
+    is_termux_usr="/usr"
+fi
 
 echo
 echo "              ----------------"
@@ -113,10 +121,10 @@ fi
 
 echo
 echo "              ----------------"
-echo "Installing MasterRC commands to /usr/local/bin/masterrc"
+echo "Installing MasterRC commands to $is_termux_usr/bin/masterrc"
 
-$sudo curl -fsSL https://raw.githubusercontent.com/Master3307/masterrc/refs/heads/master/masterrc.sh -o /usr/local/bin/masterrc
-$sudo chmod +x /usr/local/bin/masterrc
+$sudo curl -fsSL https://raw.githubusercontent.com/Master3307/masterrc/refs/heads/master/masterrc.sh -o $is_termux_usr/bin/masterrc
+$sudo chmod +x $is_termux_usr/bin/masterrc
 
 echo
 echo "Installed MasterRC"
