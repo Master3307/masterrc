@@ -112,17 +112,17 @@ else
     sudo="sudo"
 fi
 
-
-if [ -n "${TERMUX_VERSION:-}" ] || [[ "${PREFIX:-}" == *com.termux* ]]; then
-    nerdfetch_target="${PREFIX:-/data/data/com.termux/files/usr}/bin/nerdfetch"
-    nerdfetch_chmod="a+x"
-    nerdfetch_bin="${PREFIX:-/data/data/com.termux/files/usr}/bin/nerdfetch"
-else
-    nerdfetch_target="/usr/bin/nerdfetch"
-    nerdfetch_chmod="u+x"
-    nerdfetch_bin="/usr/bin/nerdfetch"
-fi
-
+nerdcheck() {
+  if [ -n "${TERMUX_VERSION:-}" ] || [[ "${PREFIX:-}" == *com.termux* ]]; then
+      nerdfetch_target="${PREFIX:-/data/data/com.termux/files/usr}/bin/nerdfetch"
+      nerdfetch_chmod="a+x"
+      nerdfetch_bin="${PREFIX:-/data/data/com.termux/files/usr}/bin/nerdfetch"
+  else
+      nerdfetch_target="/usr/bin/nerdfetch"
+      nerdfetch_chmod="u+x"
+      nerdfetch_bin="/usr/bin/nerdfetch"
+  fi
+}
 
 
 fortune_any() {
@@ -629,7 +629,8 @@ uninstall-uia() {
 
 welcome() { # is the only visible thing at launch.  welcome message.
   printf "\n"
-
+  
+  nerdcheck
   if has_cmd nerdfetch "$nerdfetch_bin"; then
     $sudo "$nerdfetch_bin" "$flag"           # change this if you need. if you use nerdfont, remove the flag. if you use cozette, use -c. and if you use phosphor, use -p. if you use none of this, use -e. (usually automatic)
   fi
