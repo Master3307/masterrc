@@ -112,6 +112,11 @@ else
     nerdfetch_bin="/usr/bin/nerdfetch"
 fi
 
+if [ "$(id -u)" -eq 0 ] || [ -n "${TERMUX_VERSION:-}" ] || [[ "${PREFIX:-}" == *com.termux* ]]; then
+    sudo=""
+else
+    sudo="sudo"
+fi
 
 
 
