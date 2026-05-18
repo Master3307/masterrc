@@ -102,6 +102,17 @@ fi
 # If youw ant to force a helper:
 #helper=""
 
+if [ -n "${TERMUX_VERSION:-}" ] || [[ "${PREFIX:-}" == *com.termux* ]]; then
+    nerdfetch_target="${PREFIX:-/data/data/com.termux/files/usr}/bin/nerdfetch"
+    nerdfetch_chmod="a+x"
+    nerdfetch_bin="${PREFIX:-/data/data/com.termux/files/usr}/bin/nerdfetch"
+else
+    nerdfetch_target="/usr/bin/nerdfetch"
+    nerdfetch_chmod="u+x"
+    nerdfetch_bin="/usr/bin/nerdfetch"
+fi
+
+
 
 
 # Typofix and other small update commands
