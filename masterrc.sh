@@ -365,7 +365,7 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
   if [ -f "$HOME/uia/uia.sh" ]; then
     printf -- "\n${WHITE}------------------------------\n"
     printf "Updating UIA...\n\n"
-    masterrc uuuia
+    masterrc update-uia
   fi
 
 # Checking for package manager and Updating that one.
@@ -690,10 +690,10 @@ help() { # General Help Message. Shows all available commands that work with mas
   printf "\n${RED}(Some) Advanced commands:${R}\n"
 
   # TODO: make it more organized
-  printf "  ${GREEN}uuia${R}  . . . . . . . . Install Upload Internet Archive (only run once.)\n"
-  printf "  ${GREEN}uuuia${R} . . . . . . . . Update Upload Internet Archive\n"
+  printf "  ${GREEN}install-uia${R}  . . . . . . . . Install Upload Internet Archive (only run once.)\n"
+  printf "  ${GREEN}update-uia${R} . . . . . . . . Update Upload Internet Archive\n"
   printf "  ${GREEN}uninstall-uia${R} . . . . Uninstall Upload Internet Archive\n"
-  printf "  ${GREEN}suia${R}  . . . . . . . . Setup Upload Internet Archive for the first time\n"
+  printf "  ${GREEN}setup-uia${R}  . . . . . . . . Setup Upload Internet Archive for the first time\n"
   printf "  ${GREEN}uia${R} . . . . . . . . . Upload Internet Archive (requires setup)\n\n"
 
 
@@ -730,10 +730,10 @@ main() {
 
   # UIA commands
     uia)     uia ;;
-    uuia)    uuia;;
-    uuuia)   uuuia;;
+    install-uia)    uuia;;
+    update-uia)   uuuia;;
     uninstall-uia) uninstall-uia ;;
-    suia)    uia_setup ;;
+    setup-uia)    uia_setup ;;
   
     *)       printf "Unknown command: ${cmd}\n\ntry ${RED}masterrc help${R}\nor visit the docs: ${BLUE}https://masterrc-docs.master3307.org${R}\n\n"; return 1;;
   esac
