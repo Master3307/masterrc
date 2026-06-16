@@ -689,7 +689,7 @@ help() { # General Help Message. Shows all available commands that work with mas
 
   printf "\n${RED}(Some) Advanced commands:${R}\n"
 
-  # TODO: make it more organized
+  
   printf "  ${GREEN}install-uia${R}  . . . . . . . . Install Upload Internet Archive (only run once.)\n"
   printf "  ${GREEN}update-uia${R} . . . . . . . . Update Upload Internet Archive\n"
   printf "  ${GREEN}uninstall-uia${R} . . . . Uninstall Upload Internet Archive\n"
