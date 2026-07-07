@@ -444,11 +444,10 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
 ugit() { # quick github upload
 
   if has_cmd /usr/bin/git git; then
-    git pull
     git add .
     git commit
+    git pull --rebase
     git push
-
     git status
   fi
 }
@@ -457,6 +456,10 @@ ugit() { # quick github upload
 
 megit() {
   if has_cmd /usr/bin/git git; then
+    git add .
+    git commit
+    git pull --rebase
+    git push
     git checkout master
     git merge dev
     git pull --rebase
