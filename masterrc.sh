@@ -468,6 +468,7 @@ megit() {
 
 
 
+
 # TODO: add nerdfont install
 feature() { # install additional features like fortune or nerdfetch.
 
