@@ -102,6 +102,7 @@ alias upgrades="masterrc aptt"
 alias update-all="masterrc aptt"
 alias upgrade-all="masterrc aptt"
 alias ugit="masterrc ugit"
+alias megit="masterrc megit"
 alias feature="masterrc feature"
 
 # UIA
