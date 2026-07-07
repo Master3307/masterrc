@@ -455,6 +455,17 @@ ugit() { # quick github upload
 
 
 
+megit() {
+  if has_cmd /usr/bin/git git; then
+    git checkout master
+    git merge dev
+    git pull --rebase
+    git push
+    git checkout dev
+    git status
+  fi
+}
+
 
 
 # TODO: add nerdfont install
@@ -636,6 +647,7 @@ help() { # General Help Message. Shows all available commands that work with mas
   printf "  ${GREEN}feature${R} . . . . . . . Install additional features like fortune and nerdfetch\n\n"
 
   printf "  ${GREEN}ugit${R}  . . . . . . . . Quick GitHub upload (git add, commit, push)\n"
+  printf "  ${GREEN}megit${R} . . . . . . . . Quick GitHub merge (git checkout master, merge dev, pull, push, checkout dev)\n"
   printf "  ${GREEN}discord-update${R}  . . . Updates Discord in ${RED}Debian${R} Systems\n"
   printf "  ${GREEN}discord-install${R} . . . Install Discord in ${RED}Debian${R} Systems\n"
 
@@ -678,6 +690,7 @@ main() {
   
   # Other commands
     ugit)    ugit ;;
+    megit)   megit ;;
     discord-update) discord-update ;;
     discord-install) discord-install ;;
 
