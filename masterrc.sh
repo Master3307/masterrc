@@ -427,14 +427,14 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
 
   # TODO: make the /usr/ directory always decided on if it's termux or not. for compatibility
   printf  "\n\n${PURPLE}Updated Everything, Enjoy :D\n"
-  if has_cmd /usr/games/fortune fortune; then
+  if has_cmd /usr/bin/fortune fortune; then
     printf "Have a fortune :3\n\n${R}"
-    if ! has_cmd /usr/games/cowsay cowsay; then
+    if ! has_cmd /usr/bin/cowsay cowsay; then
       printf '"\n'
       fortune_any
       printf '"\n'
     else
-      fortune_any | /usr/games/cowsay -f sheep
+      fortune_any | cowsay -f sheep
     fi
   fi
   printf "\n\n"
