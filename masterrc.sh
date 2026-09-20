@@ -376,6 +376,12 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
     discord-update
   fi
 
+  if has_cmd /usr/bin/appman appman; then
+    printf -- "\n${WHITE}------------------------------\n"
+    printf "Updating Appman Apps...\n\n"
+    appman -u
+  fi
+
   # Finishing APT upgrades
   if has_cmd /usr/bin/apt apt; then
     printf -- "\n${GREEN}------------------------------\n"
@@ -598,7 +604,7 @@ uninstall-uia() {
 
 welcome() { # is the only visible thing at launch.  welcome message.
   printf "\n"
-  
+
   nerdcheck
   if has_cmd nerdfetch "$nerdfetch_bin"; then
     $sudo "$nerdfetch_bin" "$flag"           # change this if you need. if you use nerdfont, remove the flag. if you use cozette, use -c. and if you use phosphor, use -p. if you use none of this, use -e. (usually automatic)
@@ -659,7 +665,7 @@ help() { # General Help Message. Shows all available commands that work with mas
 
   printf "\n${RED}(Some) Advanced commands:${R}\n"
 
-  
+
   printf "  ${GREEN}install-uia${R}  . . . . . . . . Install Upload Internet Archive (only run once.)\n"
   printf "  ${GREEN}update-uia${R} . . . . . . . . Update Upload Internet Archive\n"
   printf "  ${GREEN}uninstall-uia${R} . . . . Uninstall Upload Internet Archive\n"
@@ -685,14 +691,14 @@ main() {
 
   case "$cmd" in
   # Main commands
-    welcome) welcome ;;  
+    welcome) welcome ;;
     help)    help ;;
     aptt)    aptt ;;
     masterrc) bash <(curl -fsSL https://raw.githubusercontent.com/Master3307/masterrc/refs/heads/master/install.sh) ;;
     updates)  aptt ;;
     upgrades) aptt ;;
     feature) feature ;;
-  
+
   # Other commands
     ugit)    ugit ;;
     megit)   megit ;;
@@ -705,7 +711,7 @@ main() {
     update-uia)   uuuia;;
     uninstall-uia) uninstall-uia ;;
     setup-uia)    uia_setup ;;
-  
+
     *)       printf "Unknown command: ${cmd}\n\ntry ${RED}masterrc help${R}\nor visit the docs: ${BLUE}https://masterrc-docs.master3307.org${R}\n\n"; return 1;;
   esac
 }
@@ -713,5 +719,5 @@ main() {
 
 main "$@"
 
-# hi :) 
+# hi :)
 # how are ya? :D
