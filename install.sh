@@ -108,7 +108,7 @@ download_and_update() {
 
     if cmp -s "$temp_file" "$target"; then
         printf '\r'
-        status check "$label" "is ${GREEN}Up to Date${R}."
+        status check "$label" "is Up to Date."
         return
     fi
 
@@ -119,7 +119,7 @@ download_and_update() {
     fi
 
     printf '\r'
-    status update "$label" "has been ${GREEN}updated${R}."
+    status update "$label" "has been updated."
 }
 
 
@@ -142,7 +142,7 @@ if ! grep -Fqx "$SOURCE_LINE" "$BASHRC_FILE"; then
   printf '\n%s\n' "$SOURCE_LINE" >> "$BASHRC_FILE"
   status install "~/.bashrc" "Source line has been added."
 else
-  status check "~/.bashrc" "Source line is ${GREEN}Up to Date${R}."
+  status check "~/.bashrc" "Source line is Up to Date."
 fi
 
 
