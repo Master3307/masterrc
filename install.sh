@@ -1,13 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+
 BASH_CUSTOM_URL="https://raw.githubusercontent.com/Master3307/masterrc/refs/heads/master/.bash_custom"
+
 
 TARGET_FILE="$HOME/.bash_custom"
 MASTERRC_DIR="$HOME/.masterrc"
 
+
 BASHRC_FILE="$HOME/.bashrc"
 SOURCE_LINE='[ -f "$HOME/.bash_custom" ] && source "$HOME/.bash_custom"'
+
 
 # Colors #
 ##########
@@ -37,11 +41,13 @@ UNDERLINE='\e[4m'; INVERT='\e[7m'; STRIKE='\e[9m'
 
 
 
+
 if [ "$(id -u)" -eq 0 ] || [ -n "${TERMUX_VERSION:-}" ] || [[ "${PREFIX:-}" == *com.termux* ]]; then
     sudo=""
 else
     sudo="sudo"
 fi
+
 
 if [ -n "${TERMUX_VERSION:-}" ] || [[ "${PREFIX:-}" == *com.termux* ]]; then
     nerdfetch_target="${PREFIX:-/data/data/com.termux/files/usr}/bin/nerdfetch"
@@ -53,43 +59,109 @@ else
     is_termux_usr="/usr"
 fi
 
+
+MASTERRC_URL="https://raw.githubusercontent.com/Master3307/masterrc/refs/heads/master/masterrc.sh"
+MASTERRC_TARGET="$is_termux_usr/bin/masterrc"
+TMP_DIR="$(mktemp -d)"
+trap 'rm -rf "$TMP_DIR"' EXIT
+
+status() {
+    local state="$1"
+    local item="$2"
+    local message="$3"
+
+    case "$state" in
+        loading) printf "${DIM}[..]${R} ${RED}%s${R} %s\r" "$item" "$message" ;;
+        check)   printf "${GREEN}[✓]${R} ${RED}%s${R} %s\n" "$item" "$message" ;;
+        update)  printf "${GREEN}[✓]${R} ${RED}%s${R} %s\n" "$item" "$message" ;;
+        install) printf "${GREEN}[✓]${R} ${RED}%s${R} %s\n" "$item" "$message" ;;
+        info)    printf "${YELLOW}[!]${R} ${RED}%s${R} %s\n" "$item" "$message" ;;
+        error)   printf "${RED}[✗]${R} ${RED}%s${R} %s\n" "$item" "$message" ;;
+    esac
+}
+
+download_and_update() {
+    local url="$1"
+    local target="$2"
+    local label="$3"
+    local use_sudo="${4:-false}"
+    local temp_file="$TMP_DIR/$(basename "$target")"
+
+    status loading "$label" "Checking for updates..."
+
+    if ! curl -fsSL "$url" -o "$temp_file"; then
+        printf '\n'
+        status error "$label" "Failed to check for updates."
+        exit 1
+    fi
+
+    if [ ! -e "$target" ]; then
+        if [ "$use_sudo" = true ]; then
+            $sudo install -Dm755 "$temp_file" "$target"
+        else
+            install -Dm644 "$temp_file" "$target"
+        fi
+        printf '\r'
+        status install "$label" "has been installed."
+        return
+    fi
+
+    if cmp -s "$temp_file" "$target"; then
+        printf '\r'
+        status check "$label" "is ${GREEN}Up to Date${R}."
+        return
+    fi
+
+    if [ "$use_sudo" = true ]; then
+        $sudo install -Dm755 "$temp_file" "$target"
+    else
+        install -Dm644 "$temp_file" "$target"
+    fi
+
+    printf '\r'
+    status update "$label" "has been ${GREEN}updated${R}."
+}
+
+
 echo
 echo "              ----------------"
-echo "Downloading ~/.bash_custom"
-curl -fsSL "$BASH_CUSTOM_URL" -o "$TARGET_FILE"
-echo
+
+if [ ! -f "$TARGET_FILE" ]; then
+    status info "~/.bash_custom" "Fresh install detected."
+fi
+
+download_and_update "$BASH_CUSTOM_URL" "$TARGET_FILE" "~/.bash_custom"
+
 
 if [ ! -f "$BASHRC_FILE" ]; then
   touch "$BASHRC_FILE"
 fi
 
+
 if ! grep -Fqx "$SOURCE_LINE" "$BASHRC_FILE"; then
   printf '\n%s\n' "$SOURCE_LINE" >> "$BASHRC_FILE"
-  echo "Added source line to ~/.bashrc"
-  echo
+  status install "~/.bashrc" "Source line has been added."
 else
-  echo "Source line already in ~/.bashrc"
-  echo
+  status check "~/.bashrc" "Source line is ${GREEN}Up to Date${R}."
 fi
 
+
 echo
 echo "              ----------------"
-echo "Installing MasterRC commands to $is_termux_usr/bin/masterrc"
 
-$sudo curl -fsSL https://raw.githubusercontent.com/Master3307/masterrc/refs/heads/master/masterrc.sh -o $is_termux_usr/bin/masterrc
-$sudo chmod +x $is_termux_usr/bin/masterrc
+if [ ! -f "$MASTERRC_TARGET" ]; then
+    status info "masterrc" "Fresh install detected."
+fi
+
+download_and_update "$MASTERRC_URL" "$MASTERRC_TARGET" "masterrc" true
+
 
 echo
-echo "Installed MasterRC"
-echo
-
 echo "              ----------------"
-printf "${R}Done, Installed/Updated masterrc.\n"
+printf "${R}Done, checked masterrc for updates.\n"
 printf "... and have fun with whatever you just installed :3\n\n"
 printf "Feel free to try \"${RED}masterrc aptt${R}\" in a Terminal. It updates everything.\n"
 printf "Also.. you can run \"${RED}masterrc help${R}\" to see all available commands.\n\nReload your shell with: ${RED}source ~/.bashrc${R}\n\n"
-
-
 
 
 
