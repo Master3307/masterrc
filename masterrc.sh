@@ -377,9 +377,15 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
   fi
 
   if has_cmd /usr/bin/appman appman; then
-    printf -- "\n${WHITE}------------------------------\n"
+    printf -- "\n${RED}------------------------------\n"
     printf "Updating Appman Apps...\n\n"
     appman -u
+  fi
+
+  if has_cmd /usr/bin/shelly shelly; then
+    printf -- "\n${B_CYAN}------------------------------\n"
+    printf "Upgrading Shelly...\n\n"
+    shelly upgrade
   fi
 
   # Finishing APT upgrades
