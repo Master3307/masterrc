@@ -385,7 +385,7 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
   if has_cmd /usr/bin/shelly shelly; then
     printf -- "\n${B_CYAN}------------------------------\n"
     printf "Upgrading Shelly...\n\n"
-    shelly upgrade
+    shelly upgrade all
   fi
 
   # Finishing APT upgrades
