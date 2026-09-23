@@ -2,15 +2,19 @@
 set -euo pipefail
 
 
+
 BASH_CUSTOM_URL="https://raw.githubusercontent.com/Master3307/masterrc/refs/heads/master/.bash_custom"
+
 
 
 TARGET_FILE="$HOME/.bash_custom"
 MASTERRC_DIR="$HOME/.masterrc"
 
 
+
 BASHRC_FILE="$HOME/.bashrc"
 SOURCE_LINE='[ -f "$HOME/.bash_custom" ] && source "$HOME/.bash_custom"'
+
 
 
 # Colors #
@@ -42,6 +46,7 @@ UNDERLINE='\e[4m'; INVERT='\e[7m'; STRIKE='\e[9m'
 
 
 
+
 if [ "$(id -u)" -eq 0 ] || [ -n "${TERMUX_VERSION:-}" ] || [[ "${PREFIX:-}" == *com.termux* ]]; then
     sudo=""
 else
@@ -49,10 +54,11 @@ else
 fi
 
 
+
 if [ -n "${TERMUX_VERSION:-}" ] || [[ "${PREFIX:-}" == *com.termux* ]]; then
     nerdfetch_target="${PREFIX:-/data/data/com.termux/files/usr}/bin/nerdfetch"
     nerdfetch_chmod="a+x"
-    is_termux_usr="${PREFIX:-/data/data/com.termux/files/usr/}"
+    is_termux_usr="${PREFIX:-/data/data/com.termux/files/usr}"
 else
     nerdfetch_target="/usr/bin/nerdfetch"
     nerdfetch_chmod="u+x"
@@ -60,34 +66,74 @@ else
 fi
 
 
+
 MASTERRC_URL="https://raw.githubusercontent.com/Master3307/masterrc/refs/heads/master/masterrc.sh"
 MASTERRC_TARGET="$is_termux_usr/bin/masterrc"
 TMP_DIR="$(mktemp -d)"
 trap 'rm -rf "$TMP_DIR"' EXIT
+
 
 status() {
     local state="$1"
     local item="$2"
     local message="$3"
 
+
     case "$state" in
-        loading) printf "${DIM}[..]${R} ${RED}%s${R} %s\r" "$item" "$message" ;;
-        check)   printf "${GREEN}[✓]${R} ${RED}%s${R} %s\n" "$item" "$message" ;;
-        update)  printf "${GREEN}[✓]${R} ${RED}%s${R} %s\n" "$item" "$message" ;;
-        install) printf "${GREEN}[✓]${R} ${RED}%s${R} %s\n" "$item" "$message" ;;
-        info)    printf "${YELLOW}[!]${R} ${RED}%s${R} %s\n" "$item" "$message" ;;
-        error)   printf "${RED}[✗]${R} ${RED}%s${R} %s\n" "$item" "$message" ;;
+        loading) printf "${DIM}[..]${R} ${RED}%s${R} %s\033[K\r" "$item" "$message" ;;
+        check)   printf "\033[K${GREEN}[✓]${R} ${RED}%s${R} %s\n" "$item" "$message" ;;
+        update)  printf "\033[K${GREEN}[✓]${R} ${RED}%s${R} %s\n" "$item" "$message" ;;
+        install) printf "\033[K${GREEN}[✓]${R} ${RED}%s${R} %s\n" "$item" "$message" ;;
+        info)    printf "\033[K${YELLOW}[!]${R} ${RED}%s${R} %s\n" "$item" "$message" ;;
+        error)   printf "\033[K${RED}[✗]${R} ${RED}%s${R} %s\n" "$item" "$message" ;;
     esac
 }
+
+
+install_file() {
+    local source="$1"
+    local target="$2"
+    local mode="$3"
+    local use_sudo="${4:-false}"
+    local target_dir
+
+
+    target_dir="$(dirname "$target")"
+
+
+    if [ "$use_sudo" = true ]; then
+        if [ -n "$sudo" ]; then
+            $sudo mkdir -p "$target_dir"
+            $sudo cp "$source" "$target"
+            $sudo chmod "$mode" "$target"
+        else
+            mkdir -p "$target_dir"
+            cp "$source" "$target"
+            chmod "$mode" "$target"
+        fi
+    else
+        mkdir -p "$target_dir"
+        cp "$source" "$target"
+        chmod "$mode" "$target"
+    fi
+}
+
 
 download_and_update() {
     local url="$1"
     local target="$2"
     local label="$3"
     local use_sudo="${4:-false}"
-    local temp_file="$TMP_DIR/$(basename "$target")"
+    local mode="${5:-644}"
+    local temp_file
+    local cmp_result
+
+
+    temp_file="$(mktemp "$TMP_DIR/${label//\//_}.XXXXXX")"
+
 
     status loading "$label" "Checking for updates..."
+
 
     if ! curl -fsSL "$url" -o "$temp_file"; then
         printf '\n'
@@ -95,47 +141,61 @@ download_and_update() {
         exit 1
     fi
 
+
     if [ ! -e "$target" ]; then
-        if [ "$use_sudo" = true ]; then
-            $sudo install -Dm755 "$temp_file" "$target"
-        else
-            install -Dm644 "$temp_file" "$target"
-        fi
-        printf '\r'
+        install_file "$temp_file" "$target" "$mode" "$use_sudo"
         status install "$label" "has been installed."
         return
     fi
 
+
     if cmp -s "$temp_file" "$target"; then
-        printf '\r'
+        cmp_result=0
+    else
+        cmp_result=$?
+    fi
+
+
+    if [ "$cmp_result" -eq 0 ]; then
         status check "$label" "is Up to Date."
         return
     fi
 
-    if [ "$use_sudo" = true ]; then
-        $sudo install -Dm755 "$temp_file" "$target"
-    else
-        install -Dm644 "$temp_file" "$target"
+
+    if [ "$cmp_result" -gt 1 ]; then
+        status error "$label" "Could not compare local and remote files."
+        exit 1
     fi
 
-    printf '\r'
+
+    status loading "$label" "Update available..."
+
+
+    install_file "$temp_file" "$target" "$mode" "$use_sudo"
+
+
     status update "$label" "has been updated."
 }
+
 
 
 echo
 echo "              ----------------"
 
+
 if [ ! -f "$TARGET_FILE" ]; then
     status info "~/.bash_custom" "Fresh install detected."
 fi
 
-download_and_update "$BASH_CUSTOM_URL" "$TARGET_FILE" "~/.bash_custom"
+
+download_and_update "$BASH_CUSTOM_URL" "$TARGET_FILE" "~/.bash_custom" false 644
+
 
 
 if [ ! -f "$BASHRC_FILE" ]; then
   touch "$BASHRC_FILE"
 fi
+
 
 
 if ! grep -Fqx "$SOURCE_LINE" "$BASHRC_FILE"; then
@@ -146,14 +206,18 @@ else
 fi
 
 
+
 echo
 echo "              ----------------"
+
 
 if [ ! -f "$MASTERRC_TARGET" ]; then
     status info "masterrc" "Fresh install detected."
 fi
 
-download_and_update "$MASTERRC_URL" "$MASTERRC_TARGET" "masterrc" true
+
+download_and_update "$MASTERRC_URL" "$MASTERRC_TARGET" "masterrc" true 755
+
 
 
 echo
