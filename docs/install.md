@@ -23,7 +23,7 @@ to *install* it with one command.
 ## Update
 
 ---
-You can update it by running `masterrc` in a Console Window or the install command again.
+You can update it by running `masterrc masterrc` in a Console Window or the install command again.
 
 !!! info "Info"
     Running `aptt`, `updates` or `upgrades` also updates the MasterRC script among other things. Check the **[Usage](usage.md)** page for more information on the commands.
