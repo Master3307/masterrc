@@ -312,7 +312,7 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
   # 100% always updating masterrc
   printf -- "\n${PURPLE}------------------------------\n"
   printf "Updating Masterrc...\n\n"
-  bash <(curl -fsSL https://raw.githubusercontent.com/Master3307/masterrc/refs/heads/master/install.sh)
+  curl -fsSL "https://raw.githubusercontent.com/Master3307/masterrc/refs/heads/master/install.sh" | bash
 
 
   if [ -f "$HOME/uia/uia.sh" ]; then
