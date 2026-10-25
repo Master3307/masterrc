@@ -372,7 +372,7 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
 
   if has_cmd /usr/bin/apk apk; then
     printf -- "\n${RED}------------------------------\n"
-    printf "Refreshing Snap...\n\n"
+    printf "Upgrading APK...\n\n"
     $sudo apk update
     $sudo apk upgrade
   fi
@@ -384,7 +384,7 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
 
   if has_cmd /usr/bin/appman appman; then
     printf -- "\n${RED}------------------------------\n"
-    printf "Updating Appman Apps...\n\n"
+    printf "Updating Appman Apps...${R}\n\n"
     appman -u
   fi
 
