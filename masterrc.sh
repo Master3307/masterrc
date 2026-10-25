@@ -370,6 +370,12 @@ aptt() { # This is the Main update command. It updates pretty much everything. W
     $sudo snap refresh
   fi
 
+  if has_cmd /usr/bin/apk apk; then
+    printf -- "\n${RED}------------------------------\n"
+    printf "Refreshing Snap...\n\n"
+    $sudo apk update
+    $sudo apk upgrade
+  fi
 
   # Discord update
   if has_cmd /usr/bin/discord discord; then
