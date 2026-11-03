@@ -3,7 +3,9 @@ set -euo pipefail
 
 
 
+
 BASH_CUSTOM_URL="https://raw.githubusercontent.com/Master3307/masterrc/refs/heads/master/.bash_custom"
+
 
 
 
@@ -12,8 +14,10 @@ MASTERRC_DIR="$HOME/.masterrc"
 
 
 
+
 BASHRC_FILE="$HOME/.bashrc"
 SOURCE_LINE='[ -f "$HOME/.bash_custom" ] && source "$HOME/.bash_custom"'
+
 
 
 
@@ -47,11 +51,13 @@ UNDERLINE='\e[4m'; INVERT='\e[7m'; STRIKE='\e[9m'
 
 
 
+
 if [ "$(id -u)" -eq 0 ] || [ -n "${TERMUX_VERSION:-}" ] || [[ "${PREFIX:-}" == *com.termux* ]]; then
     sudo=""
 else
     sudo="sudo"
 fi
+
 
 
 
@@ -67,10 +73,87 @@ fi
 
 
 
+
+TOTAL_STEPS=3
+COMPLETED_STEPS=0
+BAR_WIDTH=24
+PROGRESS_VISIBLE=false
+
+
+
+
+clear_progress() {
+    if [ "$PROGRESS_VISIBLE" = true ]; then
+        printf '\r\033[2K'
+        PROGRESS_VISIBLE=false
+    fi
+}
+
+
+
+progress() {
+    local message="$1"
+    local filled
+    local percent
+    local bar
+    local empty
+    local color="$WHITE"
+
+
+
+    filled=$((COMPLETED_STEPS * BAR_WIDTH / TOTAL_STEPS))
+    percent=$((COMPLETED_STEPS * 100 / TOTAL_STEPS))
+
+
+
+    if [ "$COMPLETED_STEPS" -eq "$TOTAL_STEPS" ]; then
+        color="$GREEN"
+    fi
+
+
+
+    printf -v bar '%*s' "$filled" ''
+    printf -v empty '%*s' "$((BAR_WIDTH - filled))" ''
+
+
+
+    printf '\r\033[2K%b<%s%s> %3d%%%b %b(%d/%d)%b %s' \
+        "$color" "${bar// /-}" "$empty" "$percent" "$R" \
+        "$DIM" "$COMPLETED_STEPS" "$TOTAL_STEPS" "$R" "$message"
+
+
+
+    PROGRESS_VISIBLE=true
+}
+
+
+
+complete_step() {
+    COMPLETED_STEPS=$((COMPLETED_STEPS + 1))
+
+
+
+    if [ "$COMPLETED_STEPS" -eq "$TOTAL_STEPS" ]; then
+        clear_progress
+        printf '\n'
+        progress "All checks complete."
+        printf '\n'
+        PROGRESS_VISIBLE=false
+    else
+        progress "$1"
+    fi
+}
+
+
+
+
 MASTERRC_URL="https://raw.githubusercontent.com/Master3307/masterrc/refs/heads/master/masterrc.sh"
 MASTERRC_TARGET="$is_termux_usr/bin/masterrc"
 TMP_DIR="$(mktemp -d)"
-trap 'rm -rf "$TMP_DIR"' EXIT
+trap 'clear_progress; rm -rf "$TMP_DIR"' EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
+
 
 
 status() {
@@ -79,8 +162,19 @@ status() {
     local message="$3"
 
 
+
+    if [ "$state" = loading ]; then
+        progress "$item — $message"
+        return
+    fi
+
+
+
+    clear_progress
+
+
+
     case "$state" in
-        loading) printf "${DIM}[..]${R} ${RED}%s${R} %s\033[K\r" "$item" "$message" ;;
         check)   printf "\033[K${GREEN}[✓]${R} ${RED}%s${R} %s\n" "$item" "$message" ;;
         update)  printf "\033[K${GREEN}[✓]${R} ${RED}%s${R} %s\n" "$item" "$message" ;;
         install) printf "\033[K${GREEN}[✓]${R} ${RED}%s${R} %s\n" "$item" "$message" ;;
@@ -88,6 +182,7 @@ status() {
         error)   printf "\033[K${RED}[✗]${R} ${RED}%s${R} %s\n" "$item" "$message" ;;
     esac
 }
+
 
 
 install_file() {
@@ -98,7 +193,13 @@ install_file() {
     local target_dir
 
 
+
     target_dir="$(dirname "$target")"
+
+
+
+    clear_progress
+
 
 
     if [ "$use_sudo" = true ]; then
@@ -119,6 +220,7 @@ install_file() {
 }
 
 
+
 download_and_update() {
     local url="$1"
     local target="$2"
@@ -129,24 +231,29 @@ download_and_update() {
     local cmp_result
 
 
+
     temp_file="$(mktemp "$TMP_DIR/${label//\//_}.XXXXXX")"
+
 
 
     status loading "$label" "Checking for updates..."
 
 
+
     if ! curl -fsSL "$url" -o "$temp_file"; then
-        printf '\n'
         status error "$label" "Failed to check for updates."
         exit 1
     fi
 
 
+
     if [ ! -e "$target" ]; then
         install_file "$temp_file" "$target" "$mode" "$use_sudo"
         status install "$label" "has been installed."
+        complete_step "$label installed."
         return
     fi
+
 
 
     if cmp -s "$temp_file" "$target"; then
@@ -156,10 +263,13 @@ download_and_update() {
     fi
 
 
+
     if [ "$cmp_result" -eq 0 ]; then
         status check "$label" "is Up to Date."
+        complete_step "$label checked."
         return
     fi
+
 
 
     if [ "$cmp_result" -gt 1 ]; then
@@ -168,14 +278,19 @@ download_and_update() {
     fi
 
 
+
     status loading "$label" "Update available..."
+
 
 
     install_file "$temp_file" "$target" "$mode" "$use_sudo"
 
 
+
     status update "$label" "has been updated."
+    complete_step "$label updated."
 }
+
 
 
 
@@ -183,18 +298,27 @@ echo
 echo "              ----------------"
 
 
+
 if [ ! -f "$TARGET_FILE" ]; then
     status info "~/.bash_custom" "Fresh install detected."
 fi
+
 
 
 download_and_update "$BASH_CUSTOM_URL" "$TARGET_FILE" "~/.bash_custom" false 644
 
 
 
+
+status loading "~/.bashrc" "Checking source line..."
+
+
+
+
 if [ ! -f "$BASHRC_FILE" ]; then
   touch "$BASHRC_FILE"
 fi
+
 
 
 
@@ -207,8 +331,16 @@ fi
 
 
 
+
+complete_step "~/.bashrc checked."
+
+
+
+
+clear_progress
 echo
 echo "              ----------------"
+
 
 
 if [ ! -f "$MASTERRC_TARGET" ]; then
@@ -216,7 +348,9 @@ if [ ! -f "$MASTERRC_TARGET" ]; then
 fi
 
 
+
 download_and_update "$MASTERRC_URL" "$MASTERRC_TARGET" "masterrc" true 755
+
 
 
 
